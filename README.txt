@@ -1,1 +1,1 @@
-Koa is a disk-backed implementation of a B+ tree written in Java.
+Koa is a Java implementation of disk-backed B+ trees.
