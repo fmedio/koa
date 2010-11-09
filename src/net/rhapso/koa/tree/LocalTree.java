@@ -24,40 +24,23 @@
 
 package net.rhapso.koa.tree;
 
+import net.rhapso.koa.AddressableFactory;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.BlockAddressable;
-import net.rhapso.koa.storage.BlockSize;
-import net.rhapso.koa.storage.FileAddressable;
-
-import java.io.File;
 
 public class LocalTree implements Tree {
     private final NodeFactory nodeFactory;
     private final TreeControl treeControl;
 
-    public static LocalTree openOrCreate(File file) throws Exception {
-        if (!file.exists()) {
-            file.createNewFile();
-            return initialize(new FileAddressable(file));
+
+    public static LocalTree open(StoreName storeName, AddressableFactory addressableFactory) {
+        if (addressableFactory.exists(storeName)) {
+            NodeFactory factory = new NodeFactory(addressableFactory.openAddressable(storeName));
+            return new LocalTree(factory, factory.getTreeControl());
         } else {
-            FileAddressable addressable = new FileAddressable(file);
-            return open(addressable);
+            Addressable addressable = addressableFactory.openAddressable(storeName);
+            NodeFactory nodeFactory = NodeFactory.initialize(addressable, addressableFactory.getBlockSize(), addressableFactory.getOrder());
+            return new LocalTree(nodeFactory, nodeFactory.getTreeControl());
         }
-    }
-
-    public static LocalTree open(Addressable addressable) {
-        TreeControl treeControl = new TreeControl(addressable);
-        BlockSize blockSize = treeControl.getBlockSize();
-        NodeFactory nodeFactory = new NodeFactory(new BlockAddressable(addressable, blockSize, 10000));
-        return new LocalTree(nodeFactory, treeControl);
-    }
-
-    public static LocalTree initialize(Addressable adressable) {
-        Order order = new Order(10);
-        BlockSize blockSize = new BlockSize(4096 * 16);
-        BlockAddressable blockAddressable = new BlockAddressable(adressable, blockSize, 10000);
-        NodeFactory nodeFactory = NodeFactory.initialize(blockAddressable, blockSize, order);
-        return new LocalTree(nodeFactory, nodeFactory.getTreeControl());
     }
 
     public LocalTree(NodeFactory nodeFactory, TreeControl treeControl) {

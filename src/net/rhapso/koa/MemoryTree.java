@@ -22,17 +22,15 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.tree;
+package net.rhapso.koa;
 
-import net.rhapso.koa.storage.BlockAddressable;
-import net.rhapso.koa.storage.BlockSize;
-import net.rhapso.koa.storage.MemoryAddressable;
+import net.rhapso.koa.tree.*;
 
 public class MemoryTree implements Tree {
     private Tree tree;
 
     public MemoryTree() {
-        tree = LocalTree.initialize(new BlockAddressable(new MemoryAddressable(4096 * 64), new BlockSize(4096 * 16), 10));
+        tree = LocalTree.open(new StoreName("memory"), new MemoryAddressableFactory());
     }
 
     @Override
@@ -41,23 +39,8 @@ public class MemoryTree implements Tree {
     }
 
     @Override
-    public Batch createBatch() {
-        return tree.createBatch();
-    }
-
-    @Override
     public Value get(Key key) {
         return tree.get(key);
-    }
-
-    @Override
-    public Cursor<Key> cursorAt(Key key) {
-        return tree.cursorAt(key);
-    }
-
-    @Override
-    public Cursor<Key> cursorAtOrAfter(Key key) {
-        return tree.cursorAtOrAfter(key);
     }
 
     @Override
@@ -71,6 +54,16 @@ public class MemoryTree implements Tree {
     }
 
     @Override
+    public Cursor<Key> cursorAt(Key key) {
+        return tree.cursorAt(key);
+    }
+
+    @Override
+    public Cursor<Key> cursorAtOrAfter(Key key) {
+        return tree.cursorAtOrAfter(key);
+    }
+
+    @Override
     public KeyRef referenceOf(Key key) {
         return tree.referenceOf(key);
     }
@@ -78,6 +71,11 @@ public class MemoryTree implements Tree {
     @Override
     public Key key(KeyRef ref) {
         return tree.key(ref);
+    }
+
+    @Override
+    public Batch createBatch() {
+        return tree.createBatch();
     }
 
     @Override

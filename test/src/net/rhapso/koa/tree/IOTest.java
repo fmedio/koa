@@ -26,7 +26,7 @@ package net.rhapso.koa.tree;
 
 import clutter.BaseTestCase;
 import clutter.PerformanceTest;
-import net.rhapso.koa.LocalStoreFactory;
+import net.rhapso.koa.LocalAddressableFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -63,8 +63,8 @@ public class IOTest extends BaseTestCase {
     }
 
     private void runLocal(int howMany, int samplingRate) {
-        LocalStoreFactory treeFactory = new LocalStoreFactory(data);
-        Tree tree = treeFactory.openTree(new StoreName("test"));
+        LocalAddressableFactory factory = new LocalAddressableFactory(data);
+        Tree tree = LocalTree.open(new StoreName("test"), factory);
         doRun(howMany, samplingRate, tree);
     }
 

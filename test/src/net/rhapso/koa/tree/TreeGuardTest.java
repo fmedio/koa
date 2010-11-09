@@ -26,6 +26,7 @@ package net.rhapso.koa.tree;
 
 import clutter.IntegrationTest;
 import net.rhapso.koa.BaseTreeTestCase;
+import net.rhapso.koa.MemoryTree;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

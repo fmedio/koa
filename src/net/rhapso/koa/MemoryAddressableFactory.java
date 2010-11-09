@@ -24,17 +24,15 @@
 
 package net.rhapso.koa;
 
-import com.camp4.text.skunk.PostingsIO;
 import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.BlockAddressable;
+import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.tree.StoreName;
-import net.rhapso.koa.tree.Tree;
 
-public interface StoreFactory {
-    public Tree openTree(StoreName storeName);
-
-    void flush();
-
-    PostingsIO openPostings(StoreName storeName);
-
-    Addressable openAddressable(StoreName storeName);
+public class MemoryAddressableFactory extends AddressableFactory {
+    @Override
+    protected Addressable createAddressable(StoreName storeName) {
+        Addressable addressable = new MemoryAddressable(getBlockSize().asInt() * 100);
+        return new BlockAddressable(addressable, getBlockSize(), 10);
+    }
 }

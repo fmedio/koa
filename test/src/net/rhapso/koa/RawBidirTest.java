@@ -26,7 +26,6 @@ package net.rhapso.koa;
 
 import clutter.BaseTestCase;
 import net.rhapso.koa.tree.Cursor;
-import net.rhapso.koa.tree.MemoryTree;
 
 import java.nio.ByteBuffer;
 
