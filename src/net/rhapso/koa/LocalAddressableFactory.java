@@ -43,4 +43,9 @@ public class LocalAddressableFactory extends AddressableFactory {
         File file = new File(dataDir, storeName.getName());
         return new BlockAddressable(new FileAddressable(file), getBlockSize(), 10000);
     }
+
+    @Override
+    public boolean exists(StoreName storeName) {
+        return new File(dataDir, storeName.getName()).exists();
+    }
 }

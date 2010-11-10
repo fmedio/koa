@@ -35,4 +35,9 @@ public class MemoryAddressableFactory extends AddressableFactory {
         Addressable addressable = new MemoryAddressable(getBlockSize().asInt() * 100);
         return new BlockAddressable(addressable, getBlockSize(), 10);
     }
+
+    @Override
+    public boolean exists(StoreName storeName) {
+        return addressables.keySet().contains(storeName);
+    }
 }

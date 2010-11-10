@@ -33,17 +33,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AddressableFactory {
-    protected Map<StoreName, Addressable> anonymousAddressables;
+    protected Map<StoreName, Addressable> addressables;
     protected Order order;
     protected BlockSize blockSize;
 
     public AddressableFactory() {
         order = new Order(10);
-        anonymousAddressables = new HashMap<StoreName, Addressable>();
+        addressables = new HashMap<StoreName, Addressable>();
         blockSize = new BlockSize(4096 * 16);
     }
 
     protected abstract Addressable createAddressable(StoreName storeName);
+
+    public abstract boolean exists(StoreName storeName);
 
     public BlockSize getBlockSize() {
         return blockSize;
@@ -54,20 +56,16 @@ public abstract class AddressableFactory {
     }
 
     public Addressable openAddressable(StoreName storeName) {
-        if (anonymousAddressables.containsKey(storeName)) {
-            return anonymousAddressables.get(storeName);
+        if (addressables.containsKey(storeName)) {
+            return addressables.get(storeName);
         }
         Addressable addressable = createAddressable(storeName);
-        anonymousAddressables.put(storeName, addressable);
+        addressables.put(storeName, addressable);
         return addressable;
     }
 
-    public boolean exists(StoreName storeName) {
-        return anonymousAddressables.containsKey(storeName);
-    }
-
     public void flush() {
-        for (Addressable addressable : anonymousAddressables.values()) {
+        for (Addressable addressable : addressables.values()) {
             addressable.flush();
         }
     }
