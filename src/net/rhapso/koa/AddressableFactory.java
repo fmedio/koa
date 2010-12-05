@@ -45,7 +45,11 @@ public abstract class AddressableFactory {
 
     protected abstract Addressable createAddressable(StoreName storeName);
 
-    public abstract boolean exists(StoreName storeName);
+    public abstract boolean physicallyExists(StoreName storeName);
+
+    public boolean exists(StoreName storeName) {
+        return addressables.containsKey(storeName) || physicallyExists(storeName);
+    }
 
     public BlockSize getBlockSize() {
         return blockSize;

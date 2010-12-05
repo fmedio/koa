@@ -41,11 +41,11 @@ public class LocalAddressableFactory extends AddressableFactory {
 
     protected Addressable createAddressable(StoreName storeName) {
         File file = new File(dataDir, storeName.getName());
-        return new BlockAddressable(new FileAddressable(file), getBlockSize(), 10000);
+        return new BlockAddressable(new FileAddressable(file), getBlockSize(), 1024);
     }
 
     @Override
-    public boolean exists(StoreName storeName) {
+    public boolean physicallyExists(StoreName storeName) {
         return new File(dataDir, storeName.getName()).exists();
     }
 }

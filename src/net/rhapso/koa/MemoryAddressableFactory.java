@@ -37,7 +37,7 @@ public class MemoryAddressableFactory extends AddressableFactory {
     }
 
     @Override
-    public boolean exists(StoreName storeName) {
+    public boolean physicallyExists(StoreName storeName) {
         return addressables.keySet().contains(storeName);
     }
 }
