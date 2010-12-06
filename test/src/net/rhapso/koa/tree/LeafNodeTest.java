@@ -24,9 +24,12 @@
 
 package net.rhapso.koa.tree;
 
+import clutter.Iterators;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.BlockSize;
 import net.rhapso.koa.storage.MemoryAddressable;
+
+import java.util.Iterator;
 
 import static org.mockito.Mockito.*;
 
@@ -60,8 +63,8 @@ public class LeafNodeTest extends BaseTreeTestCase {
             leafNode.put(key(key), value(key));
         }
 
-        Cursor cursor = leafNode.cursorAt(key(0));
-        assertTrue(cursor == Cursor.NULL);
+        Iterator iterator = leafNode.cursorAt(key(0));
+        assertTrue(iterator == Iterators.NULL);
 
         assertEquals("b bbb bc", readCursor(leafNode.cursorAt(key("b"))));
         assertEquals("", readCursor(leafNode.cursorAt(key("c"))));

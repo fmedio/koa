@@ -27,6 +27,8 @@ package net.rhapso.koa.tree;
 import net.rhapso.koa.AddressableFactory;
 import net.rhapso.koa.storage.Addressable;
 
+import java.util.Iterator;
+
 public class LocalTree implements Tree {
     private final NodeFactory nodeFactory;
     private final TreeControl treeControl;
@@ -67,12 +69,12 @@ public class LocalTree implements Tree {
     }
 
     @Override
-    public Cursor cursorAt(Key key) {
+    public Iterator cursorAt(Key key) {
         return obtainRoot().cursorAt(key);
     }
 
     @Override
-    public Cursor cursorAtOrAfter(Key key) {
+    public Iterator cursorAtOrAfter(Key key) {
         return obtainRoot().cursorAtOrAfter(key);
     }
 

@@ -24,7 +24,9 @@
 
 package net.rhapso.koa.tree;
 
-public class RealCursor implements Cursor<Key> {
+import java.util.Iterator;
+
+public class RealCursor implements Iterator<Key> {
     private final NodeFactory nodeFactory;
 
     private LeafNode leafNode;
@@ -44,6 +46,11 @@ public class RealCursor implements Cursor<Key> {
         refreshIfNeeded();
         isDirty = true;
         return cachedKey;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 
     private void refreshIfNeeded() {

@@ -25,9 +25,9 @@
 package net.rhapso.koa;
 
 import clutter.BaseTestCase;
-import net.rhapso.koa.tree.Cursor;
 
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
 public class RawBidirTest extends BaseTestCase {
     public void testPutGet() throws Exception {
@@ -48,11 +48,11 @@ public class RawBidirTest extends BaseTestCase {
             bidir.upsert(buffer);
         }
 
-        Cursor<Long> longCursor = bidir.cursorAtOrAfter(buffer("f"));
-        assertEquals(1l, (long) longCursor.next());
-        assertEquals(2l, (long) longCursor.next());
-        assertEquals(0l, (long) longCursor.next());
-        assertFalse(longCursor.hasNext());
+        Iterator<Long> longIterator = bidir.cursorAtOrAfter(buffer("f"));
+        assertEquals(1l, (long) longIterator.next());
+        assertEquals(2l, (long) longIterator.next());
+        assertEquals(0l, (long) longIterator.next());
+        assertFalse(longIterator.hasNext());
     }
 
     private ByteBuffer buffer(String s) {

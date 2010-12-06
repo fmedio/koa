@@ -24,10 +24,10 @@
 
 package net.rhapso.koa;
 
-import net.rhapso.koa.tree.Cursor;
 import net.rhapso.koa.tree.Tree;
 
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -107,7 +107,7 @@ public class BidirCache implements Bidir {
     }
 
     @Override
-    public Cursor<Long> cursorAtOrAfter(ByteBuffer byteBuffer) {
+    public Iterator<Long> cursorAtOrAfter(ByteBuffer byteBuffer) {
         return bidir.cursorAtOrAfter(byteBuffer);
     }
 }

@@ -26,6 +26,8 @@ package net.rhapso.koa;
 
 import net.rhapso.koa.tree.*;
 
+import java.util.Iterator;
+
 public class MemoryTree implements Tree {
     private Tree tree;
 
@@ -54,12 +56,12 @@ public class MemoryTree implements Tree {
     }
 
     @Override
-    public Cursor<Key> cursorAt(Key key) {
+    public Iterator<Key> cursorAt(Key key) {
         return tree.cursorAt(key);
     }
 
     @Override
-    public Cursor<Key> cursorAtOrAfter(Key key) {
+    public Iterator<Key> cursorAtOrAfter(Key key) {
         return tree.cursorAtOrAfter(key);
     }
 

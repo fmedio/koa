@@ -24,6 +24,8 @@
 
 package net.rhapso.koa.tree;
 
+import java.util.Iterator;
+
 public abstract class Node {
     private final KeySet keySet;
     private final NodeFactory nodeFactory;
@@ -65,11 +67,11 @@ public abstract class Node {
 
     public abstract boolean contains(Key key);
 
-    public abstract Cursor<Key> cursorAt(Key key);
+    public abstract Iterator<Key> cursorAt(Key key);
 
     public abstract Value get(Key key);
 
-    public abstract Cursor<Key> cursorAtOrAfter(Key key);
+    public abstract Iterator<Key> cursorAtOrAfter(Key key);
 
     public abstract KeyRef referenceOf(Key key);
 

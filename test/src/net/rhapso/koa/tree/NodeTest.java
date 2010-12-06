@@ -30,6 +30,7 @@ import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.BlockSize;
 import net.rhapso.koa.storage.MemoryAddressable;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,10 +40,10 @@ public class NodeTest extends BaseTreeTestCase {
         tree.put(key(1), new Value(0));
         tree.put(key(2), new Value(0));
         tree.put(key(3), new Value(0));
-        Cursor<Key> cursor = tree.cursorAtOrAfter(key(0));
+        Iterator<Key> iterator = tree.cursorAtOrAfter(key(0));
         List<Integer> keys = new LinkedList<Integer>();
-        while (cursor.hasNext()) {
-            keys.add((int) cursor.next().bytes()[0]);
+        while (iterator.hasNext()) {
+            keys.add((int) iterator.next().bytes()[0]);
         }
 
         assertEquals("1 2 3", Joiner.on(" ").join(keys));
@@ -50,10 +51,10 @@ public class NodeTest extends BaseTreeTestCase {
 
     public void testCursorAt() throws Exception {
         Tree tree = runTest(new Order(4));
-        Cursor<Key> cursor = tree.cursorAt(new Key(new byte[100]));
+        Iterator<Key> iterator = tree.cursorAt(new Key(new byte[100]));
         int count = 0;
-        while (cursor.hasNext()) {
-            Key key = cursor.next();
+        while (iterator.hasNext()) {
+            Key key = iterator.next();
             count++;
         }
         assertEquals(101, count);
@@ -61,10 +62,10 @@ public class NodeTest extends BaseTreeTestCase {
 
     public void testCursorAtOrAfter() throws Exception {
         Tree tree = runTest(new Order(4));
-        Cursor<Key> cursor = tree.cursorAtOrAfter(new Key(new byte[100]));
+        Iterator<Key> iterator = tree.cursorAtOrAfter(new Key(new byte[100]));
         int count = 0;
-        while (cursor.hasNext()) {
-            Key key = cursor.next();
+        while (iterator.hasNext()) {
+            Key key = iterator.next();
             count++;
         }
         assertEquals(101, count);
