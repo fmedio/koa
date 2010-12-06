@@ -24,6 +24,8 @@
 
 package net.rhapso.koa.tree;
 
+import java.util.Iterator;
+
 public class InnerNode extends Node {
     private final Children children;
 
@@ -83,13 +85,13 @@ public class InnerNode extends Node {
     }
 
     @Override
-    public Cursor<Key> cursorAt(Key key) {
+    public Iterator<Key> cursorAt(Key key) {
         return findNodeFor(key).cursorAt(key);
     }
 
     @Override
-    public Cursor cursorAtOrAfter(Key key) {
-        return findNodeFor(key).cursorAt(key);
+    public Iterator cursorAtOrAfter(Key key) {
+        return findNodeFor(key).cursorAtOrAfter(key);
     }
 
     private Node findNodeFor(Key key) {

@@ -24,6 +24,8 @@
 
 package net.rhapso.koa.tree;
 
+import java.util.Iterator;
+
 public class TreeGuard implements Tree {
     private final Tree tree;
 
@@ -52,12 +54,12 @@ public class TreeGuard implements Tree {
     }
 
     @Override
-    public synchronized Cursor cursorAt(final Key key) {
+    public synchronized Iterator cursorAt(final Key key) {
         return new CursorGuard(tree.cursorAt(key));
     }
 
     @Override
-    public synchronized Cursor cursorAtOrAfter(Key key) {
+    public synchronized Iterator cursorAtOrAfter(Key key) {
         return new CursorGuard(tree.cursorAtOrAfter(key));
     }
 
@@ -81,24 +83,29 @@ public class TreeGuard implements Tree {
         return new SequentialBatch(this);
     }
 
-    private class CursorGuard implements Cursor<Key> {
-        private final Cursor<Key> cursor;
+    private class CursorGuard implements Iterator<Key> {
+        private final Iterator<Key> iterator;
 
-        public CursorGuard(Cursor<Key> cursor) {
-            this.cursor = cursor;
+        public CursorGuard(Iterator<Key> iterator) {
+            this.iterator = iterator;
         }
 
         @Override
         public Key next() {
             synchronized (TreeGuard.this) {
-                return cursor.next();
+                return iterator.next();
             }
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean hasNext() {
             synchronized (TreeGuard.this) {
-                return cursor.hasNext();
+                return iterator.hasNext();
             }
         }
     }

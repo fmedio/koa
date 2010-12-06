@@ -27,6 +27,7 @@ package net.rhapso.koa;
 import net.rhapso.koa.tree.*;
 
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
 public class RawBidir implements Bidir {
     private final Tree byId;
@@ -74,19 +75,24 @@ public class RawBidir implements Bidir {
     }
 
     @Override
-    public Cursor<Long> cursorAtOrAfter(ByteBuffer byteBuffer) {
-        final Cursor<Key> keyCursor = byContents.cursorAtOrAfter(new Key(byteBuffer));
-        return new Cursor<Long>() {
+    public Iterator<Long> cursorAtOrAfter(ByteBuffer byteBuffer) {
+        final Iterator<Key> keyIterator = byContents.cursorAtOrAfter(new Key(byteBuffer));
+        return new Iterator<Long>() {
             @Override
             public Long next() {
 
-                Value value = byContents.get(keyCursor.next());
+                Value value = byContents.get(keyIterator.next());
                 return LongValue.fromBytes(value.bytes()).asLong();
             }
 
             @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
             public boolean hasNext() {
-                return keyCursor.hasNext();
+                return keyIterator.hasNext();
             }
         };
     }

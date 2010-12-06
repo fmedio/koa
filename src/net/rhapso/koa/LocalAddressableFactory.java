@@ -41,7 +41,7 @@ public class LocalAddressableFactory extends AddressableFactory {
 
     protected Addressable createAddressable(StoreName storeName) {
         File file = new File(dataDir, storeName.getName());
-        return new BlockAddressable(new FileAddressable(file), getBlockSize(), 1024);
+        return new BlockAddressable(new FileAddressable(file), getBlockSize(), 4048);
     }
 
     @Override

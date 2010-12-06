@@ -24,6 +24,10 @@
 
 package net.rhapso.koa.tree;
 
+import clutter.Iterators;
+
+import java.util.Iterator;
+
 public class LeafNode extends Node {
     private final StoredLong next;
     private final Values values;
@@ -87,17 +91,17 @@ public class LeafNode extends Node {
         return values;
     }
 
-    public Cursor<Key> cursorAt(Key key) {
+    public Iterator<Key> cursorAt(Key key) {
         int offset = keys().offsetOf(key);
         if (offset == -1) {
-            return Cursor.NULL;
+            return Iterators.NULL;
         } else {
             return new RealCursor(getNodeFactory(), this, new KeyOffset(offset));
         }
     }
 
     @Override
-    public Cursor<Key> cursorAtOrAfter(Key key) {
+    public Iterator<Key> cursorAtOrAfter(Key key) {
         int keyOffset = keys().offsetOf(key);
 
         if (keyOffset != -1) {
@@ -109,7 +113,7 @@ public class LeafNode extends Node {
             NodeRef nodeRef = getNextLeafNode();
 
             if (NodeRef.NULL.equals(nodeRef)) {
-                return Cursor.NULL;
+                return Iterators.NULL;
             }
 
             LeafNode leafNode = (LeafNode) getNodeFactory().read(nodeRef);

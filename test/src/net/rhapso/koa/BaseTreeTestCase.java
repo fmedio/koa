@@ -28,10 +28,10 @@ import clutter.BaseTestCase;
 import clutter.Functional;
 import clutter.GenericFunction;
 import com.google.common.base.Joiner;
-import net.rhapso.koa.tree.Cursor;
 import net.rhapso.koa.tree.Key;
 import net.rhapso.koa.tree.Value;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,10 +56,10 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
         return new Value(string.getBytes());
     }
 
-    protected String toString(Cursor cursor) {
+    protected String toString(Iterator iterator) {
         List<String> list = new LinkedList<String>();
-        while (cursor.hasNext()) {
-            list.add(cursor.next().toString());
+        while (iterator.hasNext()) {
+            list.add(iterator.next().toString());
         }
 
         return Joiner.on(", ").join(list);
@@ -80,10 +80,10 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
         return sorted;
     }
 
-    protected String readCursor(Cursor<Key> cursor) {
+    protected String readCursor(Iterator<Key> iterator) {
         List<String> list = new LinkedList<String>();
-        while (cursor.hasNext()) {
-            list.add(new String(cursor.next().bytes()));
+        while (iterator.hasNext()) {
+            list.add(new String(iterator.next().bytes()));
         }
         return Joiner.on(" ").join(list);
     }

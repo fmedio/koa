@@ -24,9 +24,8 @@
 
 package net.rhapso.koa;
 
-import net.rhapso.koa.tree.Cursor;
-
 import java.nio.ByteBuffer;
+import java.util.Iterator;
 
 public interface Bidir {
     long upsert(ByteBuffer byteBuffer);
@@ -35,5 +34,5 @@ public interface Bidir {
 
     ByteBuffer resolve(long id);
 
-    Cursor<Long> cursorAtOrAfter(ByteBuffer byteBuffer);
+    Iterator<Long> cursorAtOrAfter(ByteBuffer byteBuffer);
 }

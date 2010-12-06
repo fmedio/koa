@@ -24,6 +24,8 @@
 
 package net.rhapso.koa.tree;
 
+import java.util.Iterator;
+
 public interface Tree {
     public boolean put(Key key, Value value);
 
@@ -33,9 +35,9 @@ public interface Tree {
 
     public long count();
 
-    public Cursor<Key> cursorAt(Key key);
+    public Iterator<Key> cursorAt(Key key);
 
-    public Cursor<Key> cursorAtOrAfter(Key key);
+    public Iterator<Key> cursorAtOrAfter(Key key);
 
     public KeyRef referenceOf(Key key);
 

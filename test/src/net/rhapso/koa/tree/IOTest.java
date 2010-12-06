@@ -30,6 +30,7 @@ import net.rhapso.koa.LocalAddressableFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.Iterator;
 
 @PerformanceTest
 public class IOTest extends BaseTestCase {
@@ -102,10 +103,10 @@ public class IOTest extends BaseTestCase {
             }
         }
         tree.flush();
-        Cursor cursor = tree.cursorAt(new Key(new byte[1]));
+        Iterator iterator = tree.cursorAt(new Key(new byte[1]));
         long then = System.nanoTime();
-        while (cursor.hasNext()) {
-            cursor.next();
+        while (iterator.hasNext()) {
+            iterator.next();
         }
         long elapsed = System.nanoTime() - then;
         System.out.println("Cursor can read " + (((double) howMany / (double) elapsed) * 1000000000d) + " keys/sec");
