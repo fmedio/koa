@@ -41,9 +41,7 @@ public class BlockAddressable implements Addressable {
             @Override
             protected boolean removeEldestEntry(Map.Entry<BlockId, Block> eldest) {
                 if (blocks.size() > cachedBlocks) {
-                    underlying.seek(eldest.getKey().asLong() * blockSize.asLong());
-                    byte[] bytes = eldest.getValue().bytes();
-                    underlying.write(bytes);
+                    flush(eldest);
                     return true;
                 }
                 return false;
@@ -95,7 +93,7 @@ public class BlockAddressable implements Addressable {
                 underlying.seek(blockOffset);
                 underlying.read(bytes);
             }
-            block = new Block(bytes);
+            block = new Block(bytes, false);
         }
         blocks.put(blockId, block);
         return block;
@@ -171,11 +169,17 @@ public class BlockAddressable implements Addressable {
     @Override
     public void flush() {
         for (Map.Entry<BlockId, Block> entry : blocks.entrySet()) {
-            underlying.seek(entry.getKey().asLong() * blockSize.asLong());
-            underlying.write(entry.getValue().bytes());
+            flush(entry);
         }
-        blocks.clear();
         underlying.flush();
+    }
+
+    private void flush(Map.Entry<BlockId, Block> mapEntry) {
+        if (mapEntry.getValue().isDirty()) {
+            underlying.seek(mapEntry.getKey().asLong() * blockSize.asLong());
+            underlying.write(mapEntry.getValue().bytes());
+            mapEntry.getValue().markClean();
+        }
     }
 
     @Override

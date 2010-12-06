@@ -28,9 +28,11 @@ import java.nio.ByteBuffer;
 
 public class Block {
     private final ByteBuffer byteBuffer;
+    private boolean isDirty;
 
-    public Block(byte[] bytes) {
+    public Block(byte[] bytes, boolean isDirty) {
         byteBuffer = ByteBuffer.wrap(bytes);
+        this.isDirty = isDirty;
     }
 
     public int readInt(int offset) {
@@ -38,11 +40,12 @@ public class Block {
     }
 
     public void putInt(int offset, int value) {
+        isDirty = true;
         byteBuffer.putInt(offset, value);
     }
 
-
     public void put(int offset, byte[] bytes) {
+        isDirty = true;
         byteBuffer.position(offset);
         byteBuffer.put(bytes);
     }
@@ -54,6 +57,7 @@ public class Block {
 
 
     public void putLong(int offset, long value) {
+        isDirty = true;
         byteBuffer.putLong(offset, value);
     }
 
@@ -62,6 +66,7 @@ public class Block {
     }
 
     public void putDouble(int offset, double value) {
+        isDirty = true;
         byteBuffer.putDouble(offset, value);
     }
 
@@ -74,6 +79,7 @@ public class Block {
     }
 
     public void put(int offset, byte b) {
+        isDirty = true;
         byteBuffer.put(offset, b);
     }
 
@@ -81,4 +87,11 @@ public class Block {
         return byteBuffer.array();
     }
 
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void markClean() {
+        isDirty = false;
+    }
 }

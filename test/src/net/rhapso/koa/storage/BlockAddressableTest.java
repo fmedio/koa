@@ -40,7 +40,6 @@ public class BlockAddressableTest extends BaseTestCase {
         verify(underlying, times(0)).write(new byte[]{0, 0, 0, 1});
         blockAddressable.writeInt(2);
         verify(underlying, times(1)).write(new byte[]{0, 0, 0, 1});
-
     }
 
     public void testCommit() throws Exception {
@@ -62,22 +61,8 @@ public class BlockAddressableTest extends BaseTestCase {
         verify(underlying, times(1)).flush();
     }
 
-    public void testCacheMiss() throws Exception {
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, new BlockSize(4), Integer.MAX_VALUE);
-        blockAddressable.writeInt(randomInt);
-        blockAddressable.flush();
-
-        reset(underlying);
-        when(underlying.length()).thenReturn(4l);
-
-        blockAddressable.seek(0);
-        blockAddressable.writeInt(randomInt);
-        verify(underlying, times(1)).seek(0l);
-        verify(underlying, times(1)).read(any(byte[].class));
-    }
-
     public void testNextInsertLocation() throws Exception {
-        final BlockAddressable addressable = new BlockAddressable(mock(Addressable.class), new BlockSize(42), Integer.MAX_VALUE);
+        final BlockAddressable addressable = new BlockAddressable(underlying, new BlockSize(42), Integer.MAX_VALUE);
         assertEquals(0l, addressable.nextInsertionLocation(new Offset(0), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(1), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(41), 12).asLong());
@@ -87,6 +72,19 @@ public class BlockAddressableTest extends BaseTestCase {
                 addressable.nextInsertionLocation(new Offset(0), 43);
             }
         });
+    }
+
+    public void testOnlyFlushDirtyBlocks() {
+        BlockAddressable addressable = new BlockAddressable(underlying, new BlockSize(2), 2);
+        addressable.write(new byte[2]);
+        addressable.write(new byte[2]);
+        addressable.flush();
+        reset(underlying);
+        addressable.seek(0);
+        addressable.write(new byte[2]);
+        addressable.flush();
+        verify(underlying, times(1)).seek(0);
+        verify(underlying, times(1)).write(new byte[2]);
     }
 
     @Override
