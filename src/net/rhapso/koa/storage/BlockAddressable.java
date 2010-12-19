@@ -86,7 +86,7 @@ public class BlockAddressable implements Addressable {
         if (block == null) {
             long blockOffset = blockId.asLong() * blockSize.asLong();
             byte[] bytes = new byte[blockSize.asInt()];
-            if (blockOffset == underlying.length()) {
+            if (blockOffset >= underlying.length()) {
                 underlying.seek(blockOffset);
                 underlying.write(new byte[blockSize.asInt()]);
             } else {
