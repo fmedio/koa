@@ -22,10 +22,13 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
+package net.rhapso.koa.storage.block;
 
 import clutter.BaseTestCase;
 import clutter.Fallible;
+import junit.framework.Assert;
+import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.Offset;
 
 import java.nio.ByteBuffer;
 
@@ -48,17 +51,7 @@ public class BlockAddressableTest extends BaseTestCase {
         blockAddressable.flush();
         byte[] expectedResult = fillBuffer(randomInt);
         verify(underlying, times(1)).write(expectedResult);
-        assertEquals(new Offset(4l), blockAddressable.getPosition());
-    }
-
-    public void testFlush() throws Exception {
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, new BlockSize(4), Integer.MAX_VALUE);
-        blockAddressable.writeInt(randomInt);
-        blockAddressable.flush();
-        verify(underlying, times(2)).write(any(byte[].class));
-        reset(underlying);
-        blockAddressable.flush();
-        verify(underlying, times(1)).flush();
+        Assert.assertEquals(new Offset(4l), blockAddressable.getPosition());
     }
 
     public void testNextInsertLocation() throws Exception {

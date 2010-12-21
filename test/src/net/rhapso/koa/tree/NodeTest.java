@@ -27,8 +27,8 @@ package net.rhapso.koa.tree;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.BlockSize;
 import net.rhapso.koa.storage.MemoryAddressable;
+import net.rhapso.koa.storage.block.BlockSize;
 
 import java.util.Iterator;
 import java.util.LinkedList;

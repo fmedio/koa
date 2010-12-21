@@ -163,10 +163,6 @@ public class FileAddressable implements Addressable {
     }
 
     @Override
-    public void flush() {
-    }
-
-    @Override
     public void close() {
         try {
             randomAccessFile.close();

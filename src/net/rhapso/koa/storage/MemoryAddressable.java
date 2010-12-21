@@ -113,10 +113,6 @@ public class MemoryAddressable implements Addressable {
     }
 
     @Override
-    public void flush() {
-    }
-
-    @Override
     public void close() {
     }
 }

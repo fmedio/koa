@@ -24,7 +24,11 @@
 
 package net.rhapso.koa.tree;
 
-import net.rhapso.koa.storage.*;
+import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.ByteIO;
+import net.rhapso.koa.storage.Offset;
+import net.rhapso.koa.storage.StorageSize;
+import net.rhapso.koa.storage.block.BlockSize;
 
 public class NodeFactory {
     private final Addressable addressable;
@@ -115,7 +119,4 @@ public class NodeFactory {
         return treeControl;
     }
 
-    public void flush() {
-        addressable.flush();
-    }
 }

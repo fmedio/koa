@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
+package net.rhapso.koa.storage.block;
 
 import net.rhapso.koa.tree.LongValue;
 

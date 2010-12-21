@@ -22,14 +22,46 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
 
-import net.rhapso.koa.tree.IntValue;
+package net.rhapso.koa.storage.block;
 
-public class BlockSize extends IntValue {
-    public static final BlockSize DEFAULT = new BlockSize(4096);
+import net.rhapso.koa.storage.Addressable;
 
-    public BlockSize(int value) {
-        super(value);
+public class CacheKey {
+    private Addressable addressable;
+    private BlockId blockId;
+
+    public CacheKey(Addressable addressable, BlockId blockId) {
+        this.addressable = addressable;
+        this.blockId = blockId;
+    }
+
+    public Addressable getAddressable() {
+        return addressable;
+    }
+
+    public BlockId getBlockId() {
+        return blockId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CacheKey cacheKey = (CacheKey) o;
+
+        if (addressable != null ? addressable != cacheKey.addressable : cacheKey.addressable != null)
+            return false;
+        if (blockId != null ? !blockId.equals(cacheKey.blockId) : cacheKey.blockId != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = addressable != null ? addressable.hashCode() : 0;
+        result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
+        return result;
     }
 }

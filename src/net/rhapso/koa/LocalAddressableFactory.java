@@ -25,8 +25,8 @@
 package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.BlockAddressable;
 import net.rhapso.koa.storage.FileAddressable;
+import net.rhapso.koa.storage.block.BlockAddressable;
 import net.rhapso.koa.tree.StoreName;
 
 import java.io.File;

@@ -79,9 +79,4 @@ public class MemoryTree implements Tree {
     public Batch createBatch() {
         return tree.createBatch();
     }
-
-    @Override
-    public void flush() {
-        tree.flush();
-    }
 }

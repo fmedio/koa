@@ -25,6 +25,7 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.storage.*;
+import net.rhapso.koa.storage.block.BlockSize;
 
 public class TreeControl {
     private static final int LENGTH = 8;

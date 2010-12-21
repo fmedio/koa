@@ -102,7 +102,6 @@ public class IOTest extends BaseTestCase {
                 retrievalElapsed = 0;
             }
         }
-        tree.flush();
         Iterator iterator = tree.cursorAt(new Key(new byte[1]));
         long then = System.nanoTime();
         while (iterator.hasNext()) {

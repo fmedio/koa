@@ -22,26 +22,14 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
+package net.rhapso.koa.storage.block;
 
-import clutter.BaseTestCase;
+import net.rhapso.koa.tree.IntValue;
 
-public class BlockTest extends BaseTestCase {
-    public void testReadWriteInt() throws Exception {
-        Block block = new Block(new byte[]{0, 0, 0, 0}, false);
-        block.put(3, (byte) 42);
-        assertTrue(block.isDirty());
-        assertEquals(42, block.readInt(0));
-        block.putInt(0, randomInt);
-        assertEquals(randomInt, block.readInt(0));
-    }
+public class BlockSize extends IntValue {
+    public static final BlockSize DEFAULT = new BlockSize(4096);
 
-    public void testReadWriteBytes() throws Exception {
-        Block block = new Block(new byte[8], false);
-        block.put(0, new byte[]{0, 2, 3, 4, 5, 6, 7});
-        assertTrue(block.isDirty());
-        byte[] part = new byte[4];
-        block.read(2, part);
-        assertEquals(new byte[]{3, 4, 5, 6}, part);
+    public BlockSize(int value) {
+        super(value);
     }
 }

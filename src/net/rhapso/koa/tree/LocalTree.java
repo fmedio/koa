@@ -109,9 +109,4 @@ public class LocalTree implements Tree {
     public Key key(KeyRef ref) {
         return obtainRoot().key(ref);
     }
-
-    @Override
-    public void flush() {
-        nodeFactory.flush();
-    }
 }

@@ -29,9 +29,9 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.BlockSize;
 import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.Offset;
+import net.rhapso.koa.storage.block.BlockSize;
 
 import java.util.List;
 

@@ -44,6 +44,4 @@ public interface Tree {
     public Key key(KeyRef ref);
 
     public Batch createBatch();
-
-    public void flush();
 }

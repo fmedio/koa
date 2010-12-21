@@ -74,11 +74,6 @@ public class TreeGuard implements Tree {
     }
 
     @Override
-    public synchronized void flush() {
-        tree.flush();
-    }
-
-    @Override
     public Batch createBatch() {
         return new SequentialBatch(this);
     }

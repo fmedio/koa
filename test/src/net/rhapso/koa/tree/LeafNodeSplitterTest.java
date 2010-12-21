@@ -25,8 +25,8 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
-import net.rhapso.koa.storage.BlockSize;
 import net.rhapso.koa.storage.MemoryAddressable;
+import net.rhapso.koa.storage.block.BlockSize;
 
 public class LeafNodeSplitterTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;

@@ -25,7 +25,7 @@
 package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.BlockSize;
+import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.tree.Order;
 import net.rhapso.koa.tree.StoreName;
 
@@ -40,7 +40,7 @@ public abstract class AddressableFactory {
     public AddressableFactory() {
         order = new Order(10);
         addressables = new HashMap<StoreName, Addressable>();
-        blockSize = new BlockSize(4096 * 16);
+        blockSize = BlockSize.DEFAULT;
     }
 
     protected abstract Addressable createAddressable(StoreName storeName);
@@ -66,11 +66,5 @@ public abstract class AddressableFactory {
         Addressable addressable = createAddressable(storeName);
         addressables.put(storeName, addressable);
         return addressable;
-    }
-
-    public void flush() {
-        for (Addressable addressable : addressables.values()) {
-            addressable.flush();
-        }
     }
 }

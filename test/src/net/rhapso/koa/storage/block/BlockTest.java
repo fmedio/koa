@@ -22,35 +22,26 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
+package net.rhapso.koa.storage.block;
 
-public interface Addressable {
-    public void seek(long pos);
+import clutter.BaseTestCase;
 
-    public void read(byte[] b);
+public class BlockTest extends BaseTestCase {
+    public void testReadWriteInt() throws Exception {
+        Block block = new Block(new byte[]{0, 0, 0, 0}, false);
+        block.put(3, (byte) 42);
+        assertTrue(block.isDirty());
+        assertEquals(42, block.readInt(0));
+        block.putInt(0, randomInt);
+        assertEquals(randomInt, block.readInt(0));
+    }
 
-    public int readInt();
-
-    public long readLong();
-
-    public double readDouble();
-
-    public void write(byte[] b);
-
-    public void writeInt(int v);
-
-    public void writeLong(long v);
-
-    public void writeDouble(double d);
-    // Actually reads a byte, following the InputStream convention
-
-    public int read();
-
-    public void write(int aByte);
-
-    public long length();
-
-    public Offset nextInsertionLocation(Offset currentOffset, long length);
-
-    public void close();
+    public void testReadWriteBytes() throws Exception {
+        Block block = new Block(new byte[8], false);
+        block.put(0, new byte[]{0, 2, 3, 4, 5, 6, 7});
+        assertTrue(block.isDirty());
+        byte[] part = new byte[4];
+        block.read(2, part);
+        assertEquals(new byte[]{3, 4, 5, 6}, part);
+    }
 }
