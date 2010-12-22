@@ -33,13 +33,13 @@ import net.rhapso.koa.tree.StoreName;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AddressableFactory {
+public abstract class StorageFactory {
     protected Map<StoreName, Addressable> addressables;
     protected Order order;
     protected BlockSize blockSize;
     private CacheProvider cacheProvider;
 
-    public AddressableFactory(CacheProvider cacheProvider) {
+    public StorageFactory(CacheProvider cacheProvider) {
         order = new Order(10);
         addressables = new HashMap<StoreName, Addressable>();
         blockSize = BlockSize.DEFAULT;

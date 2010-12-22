@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import net.rhapso.koa.AddressableFactory;
+import net.rhapso.koa.StorageFactory;
 import net.rhapso.koa.storage.Addressable;
 
 import java.util.Iterator;
@@ -34,13 +34,13 @@ public class LocalTree implements Tree {
     private final TreeControl treeControl;
 
 
-    public static LocalTree open(StoreName storeName, AddressableFactory addressableFactory) {
-        if (addressableFactory.exists(storeName)) {
-            NodeFactory factory = new NodeFactory(addressableFactory.openAddressable(storeName));
+    public static LocalTree open(StoreName storeName, StorageFactory storageFactory) {
+        if (storageFactory.exists(storeName)) {
+            NodeFactory factory = new NodeFactory(storageFactory.openAddressable(storeName));
             return new LocalTree(factory, factory.getTreeControl());
         } else {
-            Addressable addressable = addressableFactory.openAddressable(storeName);
-            NodeFactory nodeFactory = NodeFactory.initialize(addressable, addressableFactory.getOrder());
+            Addressable addressable = storageFactory.openAddressable(storeName);
+            NodeFactory nodeFactory = NodeFactory.initialize(addressable, storageFactory.getOrder());
             return new LocalTree(nodeFactory, nodeFactory.getTreeControl());
         }
     }

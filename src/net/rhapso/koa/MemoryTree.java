@@ -24,6 +24,7 @@
 
 package net.rhapso.koa;
 
+import net.rhapso.koa.storage.MemoryStorageFactory;
 import net.rhapso.koa.tree.*;
 
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class MemoryTree implements Tree {
     private Tree tree;
 
     public MemoryTree() {
-        tree = LocalTree.open(new StoreName("memory"), new MemoryAddressableFactory());
+        tree = LocalTree.open(new StoreName("memory"), new MemoryStorageFactory());
     }
 
     @Override

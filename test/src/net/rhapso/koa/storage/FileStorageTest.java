@@ -24,41 +24,42 @@
 
 package net.rhapso.koa.storage;
 
-import java.nio.ByteBuffer;
+import clutter.BaseTestCase;
+import clutter.Fallible;
+import clutter.IntegrationTest;
+import org.apache.commons.io.FileUtils;
 
-public class MemoryAddressable implements StorageProvider {
-    private final ByteBuffer byteBuffer;
-    private int pos;
+import java.io.File;
 
-    public MemoryAddressable(int bytes) {
-        byteBuffer = ByteBuffer.allocate(bytes);
-        this.pos = 0;
+@IntegrationTest
+public class FileStorageTest extends BaseTestCase {
+    private File file;
+
+    public void testExtentAllocationOnWrite() throws Exception {
+        final FileStorage fileStorage = new FileStorage(file);
+        assertEquals(0, fileStorage.getCurrentLength());
+        fileStorage.seek(100);
+        assertFailure(RuntimeException.class, new Fallible() {
+            @Override
+            public void execute() throws Exception {
+                fileStorage.read(new byte[8]);
+            }
+        });
+        fileStorage.write(new byte[1]);
+        assertEquals(101, fileStorage.getCurrentLength());
     }
 
     @Override
-    public void seek(long pos) {
-        this.pos = (int) pos;
-    }
-
-    public void read(byte[] b) {
-        for (int i = 0; i < b.length; i++) {
-            b[i] = byteBuffer.get(pos++);
-        }
+    protected void setUp() throws Exception {
+        super.setUp();
+        file = new File("./addressable");
+        FileUtils.deleteQuietly(file);
+        file.createNewFile();
     }
 
     @Override
-    public void write(byte[] b) {
-        for (byte theByte : b) {
-            byteBuffer.put(pos++, theByte);
-        }
-    }
-
-    @Override
-    public long length() {
-        return byteBuffer.capacity();
-    }
-
-    @Override
-    public void close() {
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        FileUtils.deleteQuietly(file);
     }
 }

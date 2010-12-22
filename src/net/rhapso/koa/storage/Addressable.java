@@ -24,28 +24,128 @@
 
 package net.rhapso.koa.storage;
 
+import net.rhapso.koa.storage.block.Block;
+import net.rhapso.koa.storage.block.BlockId;
 import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.CacheProvider;
 
-public interface Addressable extends StorageProvider {
+public class Addressable {
+    private final CacheProvider cacheProvider;
+    private final StorageProvider storageProvider;
+    private final BlockSize blockSize;
+    private long position;
 
-    public int readInt();
+    public void flush() {
+        cacheProvider.flush();
+    }
 
-    public long readLong();
 
-    public double readDouble();
+    public Addressable(final StorageProvider storageProvider, final BlockSize blockSize, CacheProvider cacheProvider) {
+        this.storageProvider = storageProvider;
+        this.blockSize = blockSize;
+        this.cacheProvider = cacheProvider;
+        this.position = 0;
+    }
 
-    public void writeInt(int v);
 
-    public void writeLong(long v);
+    public void seek(long pos) {
+        this.position = pos;
+    }
 
-    public void writeDouble(double d);
-    // Actually reads a byte, following the InputStream convention
+    public void read(byte[] b) {
+        obtainBlock().read(currentBlockOffset(), b);
+        position += b.length;
+    }
 
-    public int read();
 
-    public void write(int aByte);
+    private Block obtainBlock() {
+        return cacheProvider.obtainBlock(storageProvider, currentBlockId());
+    }
 
-    public Offset nextInsertionLocation(Offset currentOffset, long length);
+    public void write(byte[] b) {
+        obtainBlock().put(currentBlockOffset(), b);
+        position += b.length;
+    }
 
-    public BlockSize getBlockSize();
+    public int readInt() {
+        int value = obtainBlock().readInt(currentBlockOffset());
+        position += 4;
+        return value;
+    }
+
+    public void writeInt(int v) {
+        obtainBlock().putInt(currentBlockOffset(), v);
+        position += 4;
+    }
+
+    public long readLong() {
+        long result = obtainBlock().readLong(currentBlockOffset());
+        position += 8;
+        return result;
+    }
+
+    public double readDouble() {
+        double result = obtainBlock().readDouble(currentBlockOffset());
+        position += 8;
+        return result;
+    }
+
+    public void writeDouble(double d) {
+        obtainBlock().putDouble(currentBlockOffset(), d);
+        position += 8;
+    }
+
+    public void writeLong(long v) {
+        obtainBlock().putLong(currentBlockOffset(), v);
+        position += 8;
+    }
+
+    public int read() {
+        byte b = obtainBlock().read(currentBlockOffset());
+        position++;
+        return b;
+    }
+
+    public void write(int aByte) {
+        obtainBlock().put(currentBlockOffset(), (byte) aByte);
+        position++;
+    }
+
+    private int currentBlockOffset() {
+        return (int) (position % blockSize.asLong());
+    }
+
+    private BlockId currentBlockId() {
+        return new BlockId(position / blockSize.asLong());
+    }
+
+    public long length() {
+        return storageProvider.length();
+    }
+
+    public Offset nextInsertionLocation(Offset currentOffset, long length) {
+        if (length > blockSize.asInt()) {
+            throw new IllegalArgumentException("Requested length exceeds block size");
+        }
+
+        long relativeLocation = currentOffset.asLong() % blockSize.asLong();
+
+        if (relativeLocation + length > blockSize.asLong()) {
+            return currentOffset.plus(blockSize.asLong() - relativeLocation);
+        }
+
+        return currentOffset;
+    }
+
+    public void close() {
+        storageProvider.close();
+    }
+
+    public Offset getPosition() {
+        return new Offset(position);
+    }
+
+    public BlockSize getBlockSize() {
+        return blockSize;
+    }
 }

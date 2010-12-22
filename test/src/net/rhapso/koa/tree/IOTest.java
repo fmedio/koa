@@ -26,7 +26,7 @@ package net.rhapso.koa.tree;
 
 import clutter.BaseTestCase;
 import clutter.PerformanceTest;
-import net.rhapso.koa.LocalAddressableFactory;
+import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCacheProvider;
 import org.apache.commons.io.FileUtils;
@@ -66,7 +66,7 @@ public class IOTest extends BaseTestCase {
     }
 
     private void runLocal(int howMany, int samplingRate) {
-        LocalAddressableFactory factory = new LocalAddressableFactory(data, new LRUCacheProvider(4048, BlockSize.DEFAULT));
+        FileStorageFactory factory = new FileStorageFactory(data, new LRUCacheProvider(4048, BlockSize.DEFAULT));
         Tree tree = LocalTree.open(new StoreName("test"), factory);
         doRun(howMany, samplingRate, tree);
     }

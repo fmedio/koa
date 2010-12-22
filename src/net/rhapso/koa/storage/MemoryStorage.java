@@ -24,73 +24,41 @@
 
 package net.rhapso.koa.storage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 
-public class FileAddressable implements StorageProvider {
-    private final RandomAccessFile randomAccessFile;
+public class MemoryStorage implements StorageProvider {
+    private final ByteBuffer byteBuffer;
+    private int pos;
 
-    public FileAddressable(File file) {
-        try {
-            this.randomAccessFile = new RandomAccessFile(file, "rw");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public MemoryStorage(int bytes) {
+        byteBuffer = ByteBuffer.allocate(bytes);
+        this.pos = 0;
     }
 
     @Override
     public void seek(long pos) {
-        try {
-            randomAccessFile.seek(pos);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.pos = (int) pos;
     }
 
-    @Override
     public void read(byte[] b) {
-        try {
-            randomAccessFile.readFully(b);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < b.length; i++) {
+            b[i] = byteBuffer.get(pos++);
         }
     }
 
     @Override
     public void write(byte[] b) {
-        try {
-            randomAccessFile.write(b);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    public long getCurrentLength() {
-        try {
-            return randomAccessFile.length();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        for (byte theByte : b) {
+            byteBuffer.put(pos++, theByte);
         }
     }
 
     @Override
     public long length() {
-        try {
-            return randomAccessFile.length();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return byteBuffer.capacity();
     }
 
     @Override
     public void close() {
-        try {
-            randomAccessFile.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

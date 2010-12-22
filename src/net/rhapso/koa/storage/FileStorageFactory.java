@@ -24,42 +24,27 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.BaseTestCase;
-import clutter.Fallible;
-import clutter.IntegrationTest;
-import org.apache.commons.io.FileUtils;
+import net.rhapso.koa.StorageFactory;
+import net.rhapso.koa.storage.block.CacheProvider;
+import net.rhapso.koa.tree.StoreName;
 
 import java.io.File;
 
-@IntegrationTest
-public class FileAddressableTest extends BaseTestCase {
-    private File file;
+public class FileStorageFactory extends StorageFactory {
+    private File dataDir;
 
-    public void testExtentAllocationOnWrite() throws Exception {
-        final FileAddressable fileAddressable = new FileAddressable(file);
-        assertEquals(0, fileAddressable.getCurrentLength());
-        fileAddressable.seek(100);
-        assertFailure(RuntimeException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                fileAddressable.read(new byte[8]);
-            }
-        });
-        fileAddressable.write(new byte[1]);
-        assertEquals(101, fileAddressable.getCurrentLength());
+    public FileStorageFactory(File dataDir, CacheProvider cacheProvider) {
+        super(cacheProvider);
+        this.dataDir = dataDir;
+    }
+
+    protected Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider) {
+        File file = new File(dataDir, storeName.getName());
+        return new Addressable(new FileStorage(file), getBlockSize(), cacheProvider);
     }
 
     @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        file = new File("./addressable");
-        FileUtils.deleteQuietly(file);
-        file.createNewFile();
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        FileUtils.deleteQuietly(file);
+    public boolean physicallyExists(StoreName storeName) {
+        return new File(dataDir, storeName.getName()).exists();
     }
 }

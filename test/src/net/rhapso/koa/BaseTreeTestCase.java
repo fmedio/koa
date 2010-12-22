@@ -29,8 +29,7 @@ import clutter.Functional;
 import clutter.GenericFunction;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
-import net.rhapso.koa.storage.block.BlockAddressable;
+import net.rhapso.koa.storage.MemoryStorage;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCacheProvider;
 import net.rhapso.koa.tree.Key;
@@ -94,6 +93,6 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
     }
 
     protected Addressable makeAddressable() {
-        return new BlockAddressable(new MemoryAddressable(1024 * 500), BlockSize.DEFAULT, new LRUCacheProvider(100, BlockSize.DEFAULT));
+        return new Addressable(new MemoryStorage(1024 * 500), BlockSize.DEFAULT, new LRUCacheProvider(100, BlockSize.DEFAULT));
     }
 }

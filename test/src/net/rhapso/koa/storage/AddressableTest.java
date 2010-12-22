@@ -22,43 +22,43 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage.block;
+package net.rhapso.koa.storage;
 
 import clutter.BaseTestCase;
 import clutter.Fallible;
 import junit.framework.Assert;
-import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.Offset;
+import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.LRUCacheProvider;
 
 import java.nio.ByteBuffer;
 
 import static org.mockito.Mockito.*;
 
-public class BlockAddressableTest extends BaseTestCase {
-    private Addressable underlying;
+public class AddressableTest extends BaseTestCase {
+    private StorageProvider storageProvider;
 
     public void testFlushCache() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(1, blockSize));
-        blockAddressable.writeInt(1);
-        verify(underlying, times(0)).write(new byte[]{0, 0, 0, 1});
-        blockAddressable.writeInt(2);
-        verify(underlying, times(1)).write(new byte[]{0, 0, 0, 1});
+        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(1, blockSize));
+        addressable.writeInt(1);
+        verify(storageProvider, times(0)).write(new byte[]{0, 0, 0, 1});
+        addressable.writeInt(2);
+        verify(storageProvider, times(1)).write(new byte[]{0, 0, 0, 1});
     }
 
     public void testCommit() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
-        blockAddressable.writeInt(randomInt);
-        blockAddressable.flush();
+        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
+        addressable.writeInt(randomInt);
+        addressable.flush();
         byte[] expectedResult = fillBuffer(randomInt);
-        verify(underlying, times(1)).write(expectedResult);
-        Assert.assertEquals(new Offset(4l), blockAddressable.getPosition());
+        verify(storageProvider, times(1)).write(expectedResult);
+        Assert.assertEquals(new Offset(4l), addressable.getPosition());
     }
 
     public void testNextInsertLocation() throws Exception {
         final BlockSize blockSize = new BlockSize(42);
-        final BlockAddressable addressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
+        final Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
         assertEquals(0l, addressable.nextInsertionLocation(new Offset(0), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(1), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(41), 12).asLong());
@@ -72,22 +72,22 @@ public class BlockAddressableTest extends BaseTestCase {
 
     public void testOnlyFlushDirtyBlocks() {
         final BlockSize blockSize = new BlockSize(2);
-        BlockAddressable addressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(2, blockSize));
+        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(2, blockSize));
         addressable.write(new byte[2]);
         addressable.write(new byte[2]);
         addressable.flush();
-        reset(underlying);
+        reset(storageProvider);
         addressable.seek(0);
         addressable.write(new byte[2]);
         addressable.flush();
-        verify(underlying, times(1)).seek(0);
-        verify(underlying, times(1)).write(new byte[2]);
+        verify(storageProvider, times(1)).seek(0);
+        verify(storageProvider, times(1)).write(new byte[2]);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        underlying = mock(Addressable.class);
+        storageProvider = mock(StorageProvider.class);
     }
 
     private byte[] fillBuffer(int value) {

@@ -36,13 +36,13 @@ import java.util.List;
 
 public class Values extends SplittableArray<ValueRef> {
 
-    public Values(NodeFactory nodeFactory, Addressable addressable, Offset offset, Order order) {
+    public Values(Addressable addressable, Offset offset, Order order) {
         super(new ValueRefIO(), addressable, new MaxSize(order.asInt() + 1), offset);
     }
 
-    public static Values initialize(NodeFactory nodeFactory, Addressable addressable, Offset offset, Order order) {
+    public static Values initialize(Addressable addressable, Offset offset, Order order) {
         initialize(new ValueRefIO(), addressable, new MaxSize(order.asInt() + 1), offset);
-        return new Values(nodeFactory, addressable, offset, order);
+        return new Values(addressable, offset, order);
     }
 
     public static StorageSize storageSize(Order order) {

@@ -86,7 +86,7 @@ public enum NodeType {
             StoredLong ref = new StoredLong(addressable, offsets.get(1));
             KeySet keySet = new KeySet(nodeFactory, addressable, offsets.get(2), order);
             StoredLong next = new StoredLong(addressable, offsets.get(3));
-            Values values = new Values(nodeFactory, addressable, offsets.get(4), order);
+            Values values = new Values(addressable, offsets.get(4), order);
             return new LeafNode(nodeFactory, keySet, values, parent, ref, next);
         }
 
@@ -100,7 +100,7 @@ public enum NodeType {
             KeySet keySet = KeySet.initialize(nodeFactory, addressable, offsets.get(2), order);
             StoredLong next = new StoredLong(addressable, offsets.get(3));
             next.write(NodeRef.NULL.asLong());
-            Values values = Values.initialize(nodeFactory, addressable, offsets.get(4), order);
+            Values values = Values.initialize(addressable, offsets.get(4), order);
             return new LeafNode(nodeFactory, keySet, values, parentStore, referenceStore, next);
         }
     };

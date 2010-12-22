@@ -22,31 +22,27 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa;
+package net.rhapso.koa.storage;
 
-import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.FileAddressable;
-import net.rhapso.koa.storage.block.BlockAddressable;
+import net.rhapso.koa.StorageFactory;
+import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.CacheProvider;
+import net.rhapso.koa.storage.block.LRUCacheProvider;
 import net.rhapso.koa.tree.StoreName;
 
-import java.io.File;
-
-public class LocalAddressableFactory extends AddressableFactory {
-    private File dataDir;
-
-    public LocalAddressableFactory(File dataDir, CacheProvider cacheProvider) {
-        super(cacheProvider);
-        this.dataDir = dataDir;
+public class MemoryStorageFactory extends StorageFactory {
+    public MemoryStorageFactory() {
+        super(new LRUCacheProvider(1000, BlockSize.DEFAULT));
     }
 
+    @Override
     protected Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider) {
-        File file = new File(dataDir, storeName.getName());
-        return new BlockAddressable(new FileAddressable(file), getBlockSize(), cacheProvider);
+        StorageProvider storageProvider = new MemoryStorage(getBlockSize().asInt() * 100);
+        return new Addressable(storageProvider, getBlockSize(), cacheProvider);
     }
 
     @Override
     public boolean physicallyExists(StoreName storeName) {
-        return new File(dataDir, storeName.getName()).exists();
+        return addressables.keySet().contains(storeName);
     }
 }
