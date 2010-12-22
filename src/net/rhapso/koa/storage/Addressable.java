@@ -24,18 +24,13 @@
 
 package net.rhapso.koa.storage;
 
-public interface Addressable {
-    public void seek(long pos);
-
-    public void read(byte[] b);
+public interface Addressable extends StorageProvider {
 
     public int readInt();
 
     public long readLong();
 
     public double readDouble();
-
-    public void write(byte[] b);
 
     public void writeInt(int v);
 
@@ -48,9 +43,6 @@ public interface Addressable {
 
     public void write(int aByte);
 
-    public long length();
-
     public Offset nextInsertionLocation(Offset currentOffset, long length);
 
-    public void close();
 }

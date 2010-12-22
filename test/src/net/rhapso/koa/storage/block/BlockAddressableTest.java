@@ -38,7 +38,8 @@ public class BlockAddressableTest extends BaseTestCase {
     private Addressable underlying;
 
     public void testFlushCache() throws Exception {
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, new BlockSize(4), 1);
+        final BlockSize blockSize = new BlockSize(4);
+        BlockAddressable blockAddressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(1, blockSize));
         blockAddressable.writeInt(1);
         verify(underlying, times(0)).write(new byte[]{0, 0, 0, 1});
         blockAddressable.writeInt(2);
@@ -46,7 +47,8 @@ public class BlockAddressableTest extends BaseTestCase {
     }
 
     public void testCommit() throws Exception {
-        BlockAddressable blockAddressable = new BlockAddressable(underlying, new BlockSize(4), Integer.MAX_VALUE);
+        final BlockSize blockSize = new BlockSize(4);
+        BlockAddressable blockAddressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
         blockAddressable.writeInt(randomInt);
         blockAddressable.flush();
         byte[] expectedResult = fillBuffer(randomInt);
@@ -55,7 +57,8 @@ public class BlockAddressableTest extends BaseTestCase {
     }
 
     public void testNextInsertLocation() throws Exception {
-        final BlockAddressable addressable = new BlockAddressable(underlying, new BlockSize(42), Integer.MAX_VALUE);
+        final BlockSize blockSize = new BlockSize(42);
+        final BlockAddressable addressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
         assertEquals(0l, addressable.nextInsertionLocation(new Offset(0), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(1), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(41), 12).asLong());
@@ -68,7 +71,8 @@ public class BlockAddressableTest extends BaseTestCase {
     }
 
     public void testOnlyFlushDirtyBlocks() {
-        BlockAddressable addressable = new BlockAddressable(underlying, new BlockSize(2), 2);
+        final BlockSize blockSize = new BlockSize(2);
+        BlockAddressable addressable = new BlockAddressable(underlying, blockSize, new LRUCacheProvider(2, blockSize));
         addressable.write(new byte[2]);
         addressable.write(new byte[2]);
         addressable.flush();

@@ -26,10 +26,11 @@ package net.rhapso.koa.storage.block;
 
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.Offset;
+import net.rhapso.koa.storage.StorageProvider;
 
 public class BlockAddressable implements Addressable {
     private final CacheProvider cacheProvider;
-    private final Addressable underlying;
+    private final StorageProvider storageProvider;
     private final BlockSize blockSize;
     private long position;
 
@@ -38,10 +39,10 @@ public class BlockAddressable implements Addressable {
     }
 
 
-    public BlockAddressable(final Addressable underlying, final BlockSize blockSize, final int cachedBlocks) {
-        this.underlying = underlying;
+    public BlockAddressable(final StorageProvider storageProvider, final BlockSize blockSize, CacheProvider cacheProvider) {
+        this.storageProvider = storageProvider;
         this.blockSize = blockSize;
-        this.cacheProvider = new LRUCacheProvider(cachedBlocks, blockSize);
+        this.cacheProvider = cacheProvider;
         this.position = 0;
     }
 
@@ -59,7 +60,7 @@ public class BlockAddressable implements Addressable {
 
 
     private Block obtainBlock() {
-        return cacheProvider.obtainBlock(underlying, currentBlockId());
+        return cacheProvider.obtainBlock(storageProvider, currentBlockId());
     }
 
     @Override
@@ -130,7 +131,7 @@ public class BlockAddressable implements Addressable {
 
     @Override
     public long length() {
-        return underlying.length();
+        return storageProvider.length();
     }
 
     @Override
@@ -150,7 +151,7 @@ public class BlockAddressable implements Addressable {
 
     @Override
     public void close() {
-        underlying.close();
+        storageProvider.close();
     }
 
     public Offset getPosition() {

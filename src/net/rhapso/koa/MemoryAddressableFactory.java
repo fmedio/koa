@@ -27,13 +27,20 @@ package net.rhapso.koa;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.block.BlockAddressable;
+import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.CacheProvider;
+import net.rhapso.koa.storage.block.LRUCacheProvider;
 import net.rhapso.koa.tree.StoreName;
 
 public class MemoryAddressableFactory extends AddressableFactory {
+    public MemoryAddressableFactory() {
+        super(new LRUCacheProvider(1000, BlockSize.DEFAULT));
+    }
+
     @Override
-    protected Addressable createAddressable(StoreName storeName) {
+    protected Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider) {
         Addressable addressable = new MemoryAddressable(getBlockSize().asInt() * 100);
-        return new BlockAddressable(addressable, getBlockSize(), 10);
+        return new BlockAddressable(addressable, getBlockSize(), cacheProvider);
     }
 
     @Override

@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.storage.block;
 
-import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.StorageProvider;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class LRUCacheProvider extends LinkedHashMap<CacheKey, Block> implements 
     private final int cachedBlocks;
     private final BlockSize blockSize;
 
-    LRUCacheProvider(int cachedBlocks, BlockSize blockSize) {
+    public LRUCacheProvider(int cachedBlocks, BlockSize blockSize) {
         this.cachedBlocks = cachedBlocks;
         this.blockSize = blockSize;
     }
@@ -56,32 +56,31 @@ public class LRUCacheProvider extends LinkedHashMap<CacheKey, Block> implements 
         }
     }
 
-    private void flush(Addressable addressable, BlockId blockId, Block block) {
+    private void flush(StorageProvider storageProvider, BlockId blockId, Block block) {
         if (block.isDirty()) {
-            addressable.seek(blockId.asLong() * blockSize.asLong());
-            addressable.write(block.bytes());
+            storageProvider.seek(blockId.asLong() * blockSize.asLong());
+            storageProvider.write(block.bytes());
             block.markClean();
         }
     }
 
 
     @Override
-    public Block obtainBlock(Addressable addressable, BlockId blockId) {
-        Block block = get(new CacheKey(addressable, blockId));
+    public Block obtainBlock(StorageProvider storageProvider, BlockId blockId) {
+        Block block = get(new CacheKey(storageProvider, blockId));
         if (block == null) {
             long blockOffset = blockId.asLong() * blockSize.asLong();
             byte[] bytes = new byte[blockSize.asInt()];
-            if (blockOffset >= addressable.length()) {
-                addressable.seek(blockOffset);
-                addressable.write(new byte[blockSize.asInt()]);
+            if (blockOffset >= storageProvider.length()) {
+                storageProvider.seek(blockOffset);
+                storageProvider.write(new byte[blockSize.asInt()]);
             } else {
-                addressable.seek(blockOffset);
-                addressable.read(bytes);
+                storageProvider.seek(blockOffset);
+                storageProvider.read(bytes);
             }
             block = new Block(bytes, false);
         }
-        put(new CacheKey(addressable, blockId), block);
+        put(new CacheKey(storageProvider, blockId), block);
         return block;
     }
-
 }
