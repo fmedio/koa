@@ -26,7 +26,7 @@ package net.rhapso.koa.storage;
 
 import java.nio.ByteBuffer;
 
-public class MemoryAddressable implements Addressable {
+public class MemoryAddressable implements StorageProvider {
     private final ByteBuffer byteBuffer;
     private int pos;
 
@@ -47,33 +47,6 @@ public class MemoryAddressable implements Addressable {
     }
 
     @Override
-    public int readInt() {
-        int result = byteBuffer.getInt(pos);
-        pos += 4;
-        return result;
-    }
-
-    @Override
-    public long readLong() {
-        long result = byteBuffer.getLong(pos);
-        pos += 8;
-        return result;
-    }
-
-    @Override
-    public double readDouble() {
-        double result = byteBuffer.getDouble(pos);
-        pos += 8;
-        return result;
-    }
-
-    @Override
-    public void writeDouble(double d) {
-        byteBuffer.putDouble(pos, d);
-        pos += 8;
-    }
-
-    @Override
     public void write(byte[] b) {
         for (byte theByte : b) {
             byteBuffer.put(pos++, theByte);
@@ -81,35 +54,8 @@ public class MemoryAddressable implements Addressable {
     }
 
     @Override
-    public void writeInt(int v) {
-        byteBuffer.putInt(pos, v);
-        pos += 4;
-    }
-
-    @Override
-    public void writeLong(long v) {
-        byteBuffer.putLong(pos, v);
-        pos += 8;
-    }
-
-    @Override
-    public int read() {
-        return byteBuffer.get(pos);
-    }
-
-    @Override
-    public void write(int aByte) {
-        byteBuffer.put(pos++, (byte) aByte);
-    }
-
-    @Override
     public long length() {
         return byteBuffer.capacity();
-    }
-
-    @Override
-    public Offset nextInsertionLocation(Offset currentOffset, long length) {
-        return currentOffset;
     }
 
     @Override

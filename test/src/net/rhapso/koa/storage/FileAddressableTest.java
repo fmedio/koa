@@ -42,27 +42,11 @@ public class FileAddressableTest extends BaseTestCase {
         assertFailure(RuntimeException.class, new Fallible() {
             @Override
             public void execute() throws Exception {
-                assertEquals(0l, fileAddressable.readLong());
+                fileAddressable.read(new byte[8]);
             }
         });
-        fileAddressable.write(42);
+        fileAddressable.write(new byte[1]);
         assertEquals(101, fileAddressable.getCurrentLength());
-    }
-
-    public void testDefaultValueIsZero() {
-        final FileAddressable fileAddressable = new FileAddressable(file);
-        int blockSize = 4096 * 16;
-        fileAddressable.seek(blockSize);
-        fileAddressable.write(42);
-        fileAddressable.seek(0);
-
-        assertEquals(4096 * 16 + 1, fileAddressable.length());
-
-        for (int i = 0; i < fileAddressable.length() - 1; i++) {
-            assertEquals(0, fileAddressable.read());
-        }
-
-        assertEquals(42, fileAddressable.read());
     }
 
     @Override

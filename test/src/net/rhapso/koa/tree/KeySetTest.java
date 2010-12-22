@@ -29,9 +29,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.Offset;
-import net.rhapso.koa.storage.block.BlockSize;
 
 import java.util.List;
 
@@ -125,9 +123,9 @@ public class KeySetTest extends BaseTreeTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        addressable = new MemoryAddressable(1000);
+        addressable = makeAddressable();
         order = new Order(4);
-        nodeFactory = NodeFactory.initialize(addressable, BlockSize.DEFAULT, order);
+        nodeFactory = NodeFactory.initialize(addressable, order);
         keySet = new KeySet(nodeFactory, addressable, new Offset(200), order);
     }
 }

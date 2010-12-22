@@ -25,8 +25,6 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
-import net.rhapso.koa.storage.MemoryAddressable;
-import net.rhapso.koa.storage.block.BlockSize;
 
 public class InnerNodeSplitterTest extends BaseTreeTestCase {
     public void testSplit() throws Exception {
@@ -57,7 +55,7 @@ public class InnerNodeSplitterTest extends BaseTreeTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        nodeFactory = NodeFactory.initialize(new MemoryAddressable(2000), new BlockSize(2000), new Order(5));
+        nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(5));
     }
 
     private NodeFactory nodeFactory;

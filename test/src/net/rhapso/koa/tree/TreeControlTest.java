@@ -24,48 +24,53 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
+import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
 import net.rhapso.koa.storage.block.BlockSize;
 
 import static org.mockito.Mockito.*;
 
-public class TreeControlTest extends BaseTestCase {
+public class TreeControlTest extends BaseTreeTestCase {
+    private Addressable mockAddressable;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        mockAddressable = mock(Addressable.class);
+        when(mockAddressable.getBlockSize()).thenReturn(new BlockSize(randomInt));
+    }
+
     public void testInitialize() throws Exception {
-        Addressable addressable = mock(Addressable.class);
-        TreeControl treeControl = TreeControl.initialize(addressable, new BlockSize(randomInt), new Order(3));
-        verify(addressable, times(1)).writeLong(3l);
-        verify(addressable, times(2)).writeLong(0l);
-        verify(addressable, times(1)).writeLong(eq(TreeControl.storageSize().asLong()));
-        verify(addressable, times(1)).writeLong(-1l);
-        verify(addressable, times(1)).writeLong(randomInt);
+        TreeControl.initialize(mockAddressable, new Order(3));
+        verify(mockAddressable, times(1)).writeLong(3l);
+        verify(mockAddressable, times(2)).writeLong(0l);
+        verify(mockAddressable, times(1)).writeLong(eq(TreeControl.storageSize().asLong()));
+        verify(mockAddressable, times(1)).writeLong(-1l);
+        verify(mockAddressable, times(1)).writeLong(randomInt);
     }
 
     public void testRead() throws Exception {
-        Addressable addressable = new MemoryAddressable(1000);
-        TreeControl treeControl = TreeControl.initialize(addressable, new BlockSize(randomInt), new Order(3));
+        Addressable addressable = makeAddressable();
+        TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
 
-        Offset offset = treeControl.allocate(new StorageSize(randomLong));
+        Offset offset = treeControl.allocate(new StorageSize(100));
         assertEquals(TreeControl.storageSize().asLong(), offset.asLong());
         offset = treeControl.allocate(new StorageSize(42));
-        assertEquals(TreeControl.storageSize().plus(randomLong).asLong(), offset.asLong());
+        assertEquals(TreeControl.storageSize().plus(100).asLong(), offset.asLong());
 
-        treeControl.setRootNode(new NodeRef(randomLong));
-        assertEquals(new NodeRef(randomLong), treeControl.getRootNode());
+        treeControl.setRootNode(new NodeRef(100));
+        assertEquals(new NodeRef(100), treeControl.getRootNode());
     }
 
     public void testAllocate() throws Exception {
-        Addressable addressable = mock(Addressable.class);
+        when(mockAddressable.readInt()).thenReturn(randomInt);
+        when(mockAddressable.nextInsertionLocation(any(Offset.class), anyLong())).thenReturn(new Offset(randomLong));
 
-        when(addressable.readInt()).thenReturn(randomInt);
-        when(addressable.nextInsertionLocation(any(Offset.class), anyLong())).thenReturn(new Offset(randomLong));
-
-        TreeControl treeControl = TreeControl.initialize(addressable, new BlockSize(1024), new Order(3));
+        TreeControl treeControl = TreeControl.initialize(mockAddressable, new Order(3));
         treeControl.allocate(new StorageSize(42));
 
-        verify(addressable, times(1)).nextInsertionLocation(new Offset(0), 42l);
+        verify(mockAddressable, times(1)).nextInsertionLocation(new Offset(0), 42l);
     }
 }

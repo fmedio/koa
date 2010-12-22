@@ -27,8 +27,6 @@ package net.rhapso.koa.tree;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
-import net.rhapso.koa.storage.block.BlockSize;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -84,8 +82,8 @@ public class NodeTest extends BaseTreeTestCase {
     }
 
     private Tree init(Order order) {
-        Addressable addressable = new MemoryAddressable(40000000);
-        TreeControl treeControl = TreeControl.initialize(addressable, BlockSize.DEFAULT, order);
+        Addressable addressable = makeAddressable();
+        TreeControl treeControl = TreeControl.initialize(addressable, order);
         NodeFactory nodeFactory = new NodeFactory(addressable, treeControl);
         return new LocalTree(nodeFactory, treeControl);
     }

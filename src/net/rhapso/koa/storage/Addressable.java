@@ -24,6 +24,8 @@
 
 package net.rhapso.koa.storage;
 
+import net.rhapso.koa.storage.block.BlockSize;
+
 public interface Addressable extends StorageProvider {
 
     public int readInt();
@@ -45,4 +47,5 @@ public interface Addressable extends StorageProvider {
 
     public Offset nextInsertionLocation(Offset currentOffset, long length);
 
+    public BlockSize getBlockSize();
 }

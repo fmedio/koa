@@ -25,8 +25,6 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
-import net.rhapso.koa.storage.MemoryAddressable;
-import net.rhapso.koa.storage.block.BlockSize;
 
 public class LeafNodeSplitterTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
@@ -52,6 +50,6 @@ public class LeafNodeSplitterTest extends BaseTreeTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        nodeFactory = NodeFactory.initialize(new MemoryAddressable(1000), new BlockSize(500), new Order(5));
+        nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(5));
     }
 }

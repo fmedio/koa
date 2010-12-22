@@ -26,6 +26,7 @@ package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryAddressable;
+import net.rhapso.koa.storage.StorageProvider;
 import net.rhapso.koa.storage.block.BlockAddressable;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.CacheProvider;
@@ -39,8 +40,8 @@ public class MemoryAddressableFactory extends AddressableFactory {
 
     @Override
     protected Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider) {
-        Addressable addressable = new MemoryAddressable(getBlockSize().asInt() * 100);
-        return new BlockAddressable(addressable, getBlockSize(), cacheProvider);
+        StorageProvider storageProvider = new MemoryAddressable(getBlockSize().asInt() * 100);
+        return new BlockAddressable(storageProvider, getBlockSize(), cacheProvider);
     }
 
     @Override

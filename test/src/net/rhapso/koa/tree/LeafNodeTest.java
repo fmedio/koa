@@ -26,8 +26,6 @@ package net.rhapso.koa.tree;
 
 import clutter.Iterators;
 import net.rhapso.koa.BaseTreeTestCase;
-import net.rhapso.koa.storage.MemoryAddressable;
-import net.rhapso.koa.storage.block.BlockSize;
 
 import java.util.Iterator;
 
@@ -112,9 +110,8 @@ public class LeafNodeTest extends BaseTreeTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        nodeFactory = NodeFactory.initialize(new MemoryAddressable(1000), BlockSize.DEFAULT, new Order(3));
+        nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(3));
         leafNode = nodeFactory.newLeafNode();
     }
-
 
 }

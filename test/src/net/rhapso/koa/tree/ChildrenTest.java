@@ -24,17 +24,16 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
 import com.google.common.base.Joiner;
+import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.Offset;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static org.mockito.Mockito.*;
 
-public class ChildrenTest extends BaseTestCase {
+public class ChildrenTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
     private Order order;
 
@@ -52,18 +51,18 @@ public class ChildrenTest extends BaseTestCase {
     }
 
     public void testSplitHasSideEffect() throws Exception {
-        Children children = new Children(nodeFactory, new MemoryAddressable(5000), new Offset(0), order);
+        Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         for (int i = 0; i < 5; i++) {
             children.add(i, makeNode(i + 1));
         }
-        Children destination = new Children(nodeFactory, new MemoryAddressable(5000), new Offset(0), order);
+        Children destination = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         children.splitInto(destination);
         assertEquals("3 4 5", destination.toString());
         assertEquals("1 2", children.toString());
     }
 
     public void testInsert() throws Exception {
-        Children children = new Children(nodeFactory, new MemoryAddressable(5000), new Offset(0), order);
+        Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         children.add(makeNode(2));
         children.add(makeNode(4));
         assertEquals("0 2 4", children.add(0, makeNode(0)).toString());
@@ -72,7 +71,7 @@ public class ChildrenTest extends BaseTestCase {
     }
 
     public void testIterable() throws Exception {
-        Children children = new Children(nodeFactory, new MemoryAddressable(5000), new Offset(0), order);
+        Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         for (int i = 0; i < 5; i++) {
             children.add(i, makeNode(i + 1));
         }

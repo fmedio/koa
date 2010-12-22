@@ -40,7 +40,7 @@ public class LocalTree implements Tree {
             return new LocalTree(factory, factory.getTreeControl());
         } else {
             Addressable addressable = addressableFactory.openAddressable(storeName);
-            NodeFactory nodeFactory = NodeFactory.initialize(addressable, addressableFactory.getBlockSize(), addressableFactory.getOrder());
+            NodeFactory nodeFactory = NodeFactory.initialize(addressable, addressableFactory.getOrder());
             return new LocalTree(nodeFactory, nodeFactory.getTreeControl());
         }
     }

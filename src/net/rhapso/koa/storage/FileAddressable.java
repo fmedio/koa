@@ -29,7 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class FileAddressable implements Addressable {
+public class FileAddressable implements StorageProvider {
     private final RandomAccessFile randomAccessFile;
 
     public FileAddressable(File file) {
@@ -59,81 +59,9 @@ public class FileAddressable implements Addressable {
     }
 
     @Override
-    public int readInt() {
-        try {
-            return randomAccessFile.readInt();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public long readLong() {
-        try {
-            return randomAccessFile.readLong();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public double readDouble() {
-        try {
-            return randomAccessFile.readDouble();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void writeDouble(double d) {
-        try {
-            randomAccessFile.writeDouble(d);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public void write(byte[] b) {
         try {
             randomAccessFile.write(b);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void writeInt(int v) {
-        try {
-            randomAccessFile.writeInt(v);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void writeLong(long v) {
-        try {
-            randomAccessFile.writeLong(v);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public int read() {
-        try {
-            return randomAccessFile.read();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void write(int aByte) {
-        try {
-            randomAccessFile.write(aByte);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -155,11 +83,6 @@ public class FileAddressable implements Addressable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Offset nextInsertionLocation(Offset currentOffset, long length) {
-        return currentOffset;
     }
 
     @Override

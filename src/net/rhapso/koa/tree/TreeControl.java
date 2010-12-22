@@ -34,11 +34,11 @@ public class TreeControl {
     private final Order order;
     private final BlockSize blockSize;
 
-    public static TreeControl initialize(Addressable addressable, BlockSize blockSize, Order order) {
+    public static TreeControl initialize(Addressable addressable, Order order) {
         StoredArray<Long> storedArray = StoredArray.initialize(new LongIO(), addressable, new MaxSize(LENGTH), new Offset(0));
         storedArray.add((long) order.asInt());
         storedArray.add(0l);
-        storedArray.add(blockSize.asLong());
+        storedArray.add(addressable.getBlockSize().asLong());
         storedArray.add(storageSize().asLong());
         storedArray.add(NodeRef.NULL.asLong());
         storedArray.add(0l);

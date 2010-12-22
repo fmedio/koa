@@ -28,7 +28,6 @@ import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.ByteIO;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
-import net.rhapso.koa.storage.block.BlockSize;
 
 public class NodeFactory {
     private final Addressable addressable;
@@ -39,8 +38,8 @@ public class NodeFactory {
         this(addressable, new TreeControl(addressable));
     }
 
-    public static NodeFactory initialize(Addressable addressable, BlockSize blockSize, Order order) {
-        TreeControl treeControl = TreeControl.initialize(addressable, blockSize, order);
+    public static NodeFactory initialize(Addressable addressable, Order order) {
+        TreeControl treeControl = TreeControl.initialize(addressable, order);
         return new NodeFactory(addressable, treeControl);
     }
 

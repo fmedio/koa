@@ -24,14 +24,16 @@
 
 package net.rhapso.koa;
 
-import clutter.BaseTestCase;
-import net.rhapso.koa.storage.*;
+import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.IntIO;
+import net.rhapso.koa.storage.Offset;
+import net.rhapso.koa.storage.StorageSize;
 
 import static org.mockito.Mockito.*;
 
-public class RecordsTest extends BaseTestCase {
+public class RecordsTest extends BaseTreeTestCase {
     public void testReadWrite() {
-        Addressable addressable = new MemoryAddressable(1024);
+        Addressable addressable = makeAddressable();
         Records<Integer> intRecords = new Records<Integer>(addressable, new IntIO());
         intRecords.put(42, randomInt);
         intRecords.put(84, 2 * randomInt);

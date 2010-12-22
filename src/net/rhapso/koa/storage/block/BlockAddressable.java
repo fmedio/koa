@@ -157,4 +157,9 @@ public class BlockAddressable implements Addressable {
     public Offset getPosition() {
         return new Offset(position);
     }
+
+    @Override
+    public BlockSize getBlockSize() {
+        return blockSize;
+    }
 }

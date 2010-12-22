@@ -26,10 +26,8 @@ package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.MemoryAddressable;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
-import net.rhapso.koa.storage.block.BlockSize;
 
 import static org.mockito.Mockito.*;
 
@@ -40,8 +38,8 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     private Order order;
 
     public void testInitialize() {
-        Addressable addressable = new MemoryAddressable(4096);
-        NodeFactory.initialize(addressable, new BlockSize(1024), new Order(2));
+        Addressable addressable = makeAddressable();
+        NodeFactory.initialize(addressable, new Order(2));
         NodeFactory factory = new NodeFactory(addressable);
         Tree tree = new LocalTree(factory, factory.getTreeControl());
         for (String string : new String[]{"a", "bb", "aaa", "fffff", "ab", "bbbb", "f", "ba"}) {
@@ -52,8 +50,8 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     }
 
     public void testWriteKey() throws Exception {
-        Addressable addressable = new MemoryAddressable(10000);
-        TreeControl treeControl = TreeControl.initialize(addressable, BlockSize.DEFAULT, new Order(3));
+        Addressable addressable = makeAddressable();
+        TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
         nodeFactory = new NodeFactory(addressable, treeControl);
         KeyRef left = nodeFactory.append(new Key(new byte[]{1, 2, 3}));
         KeyRef right = nodeFactory.append(new Key(new byte[]{4, 5, 6, 7}));

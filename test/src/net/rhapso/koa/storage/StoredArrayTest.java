@@ -24,16 +24,16 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.BaseTestCase;
 import clutter.Fallible;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import net.rhapso.koa.BaseTreeTestCase;
 
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class StoredArrayTest extends BaseTestCase {
+public class StoredArrayTest extends BaseTreeTestCase {
     private Addressable addressable;
     private StoredArray<Integer> array;
 
@@ -138,7 +138,7 @@ public class StoredArrayTest extends BaseTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        addressable = new MemoryAddressable(1000);
+        addressable = makeAddressable();
         array = new StoredArray<Integer>(new IntIO(), addressable, new MaxSize(4), new Offset(0));
     }
 }

@@ -24,11 +24,11 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.BaseTestCase;
+import net.rhapso.koa.BaseTreeTestCase;
 
-public class MemoryAddressableTest extends BaseTestCase {
+public class MemoryAddressableTest extends BaseTreeTestCase {
     public void testRead() throws Exception {
-        Addressable addressable = new MemoryAddressable(1000);
+        Addressable addressable = makeAddressable();
         addressable.seek(1);
         addressable.writeLong(-1);
         addressable.writeLong(randomLong);
