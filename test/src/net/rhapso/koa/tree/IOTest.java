@@ -28,7 +28,9 @@ import clutter.BaseTestCase;
 import clutter.PerformanceTest;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.LRUCacheProvider;
+import net.rhapso.koa.storage.block.Cache;
+import net.rhapso.koa.storage.block.CacheStatistics;
+import net.rhapso.koa.storage.block.LRUCache;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -66,17 +68,18 @@ public class IOTest extends BaseTestCase {
     }
 
     private void runLocal(int howMany, int samplingRate) {
-        FileStorageFactory factory = new FileStorageFactory(data, new LRUCacheProvider(4048, BlockSize.DEFAULT));
-        Tree tree = LocalTree.open(new StoreName("test"), factory);
-        doRun(howMany, samplingRate, tree);
+        Cache cache = new LRUCache(100, new BlockSize(4096));
+        FileStorageFactory factory = new FileStorageFactory(data);
+        Tree tree = LocalTree.open(new StoreName("test"), factory, cache);
+        doRun(howMany, samplingRate, tree, cache);
     }
 
-    private void doRun(int howMany, int samplingRate, Tree tree) {
+    private void doRun(int howMany, int samplingRate, Tree tree, Cache cache) {
         long insertionElapsed = 0;
         long retrievalElapsed = 0;
 
         tree.put(new Key(new byte[1]), new Value(0));
-        System.out.println("keyCount, writeThroughput, readThroughput");
+        System.out.println("keyCount, writeThroughput, readThroughput, cacheHitRatio, cacheFillRatio");
         for (int i = 0; i < howMany; i++) {
             byte[] bytes = makeRandomBytes(100);
             Key key = new Key(bytes);
@@ -93,13 +96,14 @@ public class IOTest extends BaseTestCase {
             }
 
             if (i != 0 && i % samplingRate == 0) {
+                CacheStatistics cacheStatistics = cache.resetStatistics();
                 long avgInsertionTime = insertionElapsed / samplingRate;
                 long avgRetrievalTime = retrievalElapsed / samplingRate;
 
                 double writeThroughput = 1000000000d / (double) avgInsertionTime;
                 double readThroughput = 1000000000d / (double) avgRetrievalTime;
 
-                System.out.println(i + "," + writeThroughput + "," + readThroughput);
+                System.out.println(i + "," + writeThroughput + "," + readThroughput + "," + cacheStatistics.hitRatio() + "," + cacheStatistics.fillRatio());
                 insertionElapsed = 0;
                 retrievalElapsed = 0;
             }

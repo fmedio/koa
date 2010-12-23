@@ -28,37 +28,37 @@ import clutter.BaseTestCase;
 import clutter.Fallible;
 import junit.framework.Assert;
 import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.LRUCacheProvider;
+import net.rhapso.koa.storage.block.LRUCache;
 
 import java.nio.ByteBuffer;
 
 import static org.mockito.Mockito.*;
 
 public class AddressableTest extends BaseTestCase {
-    private StorageProvider storageProvider;
+    private Storage storage;
 
     public void testFlushCache() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
-        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(1, blockSize));
+        Addressable addressable = new Addressable(storage, new LRUCache(1, blockSize));
         addressable.writeInt(1);
-        verify(storageProvider, times(0)).write(new byte[]{0, 0, 0, 1});
+        verify(storage, times(0)).write(new byte[]{0, 0, 0, 1});
         addressable.writeInt(2);
-        verify(storageProvider, times(1)).write(new byte[]{0, 0, 0, 1});
+        verify(storage, times(1)).write(new byte[]{0, 0, 0, 1});
     }
 
     public void testCommit() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
-        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
+        Addressable addressable = new Addressable(storage, new LRUCache(Integer.MAX_VALUE, blockSize));
         addressable.writeInt(randomInt);
         addressable.flush();
         byte[] expectedResult = fillBuffer(randomInt);
-        verify(storageProvider, times(1)).write(expectedResult);
+        verify(storage, times(1)).write(expectedResult);
         Assert.assertEquals(new Offset(4l), addressable.getPosition());
     }
 
     public void testNextInsertLocation() throws Exception {
         final BlockSize blockSize = new BlockSize(42);
-        final Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(Integer.MAX_VALUE, blockSize));
+        final Addressable addressable = new Addressable(storage, new LRUCache(Integer.MAX_VALUE, blockSize));
         assertEquals(0l, addressable.nextInsertionLocation(new Offset(0), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(1), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(41), 12).asLong());
@@ -72,22 +72,22 @@ public class AddressableTest extends BaseTestCase {
 
     public void testOnlyFlushDirtyBlocks() {
         final BlockSize blockSize = new BlockSize(2);
-        Addressable addressable = new Addressable(storageProvider, blockSize, new LRUCacheProvider(2, blockSize));
+        Addressable addressable = new Addressable(storage, new LRUCache(2, blockSize));
         addressable.write(new byte[2]);
         addressable.write(new byte[2]);
         addressable.flush();
-        reset(storageProvider);
+        reset(storage);
         addressable.seek(0);
         addressable.write(new byte[2]);
         addressable.flush();
-        verify(storageProvider, times(1)).seek(0);
-        verify(storageProvider, times(1)).write(new byte[2]);
+        verify(storage, times(1)).seek(0);
+        verify(storage, times(1)).write(new byte[2]);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        storageProvider = mock(StorageProvider.class);
+        storage = mock(Storage.class);
     }
 
     private byte[] fillBuffer(int value) {

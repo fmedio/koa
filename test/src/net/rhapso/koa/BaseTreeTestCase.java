@@ -31,7 +31,7 @@ import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryStorage;
 import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.LRUCacheProvider;
+import net.rhapso.koa.storage.block.LRUCache;
 import net.rhapso.koa.tree.Key;
 import net.rhapso.koa.tree.Value;
 
@@ -93,6 +93,6 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
     }
 
     protected Addressable makeAddressable() {
-        return new Addressable(new MemoryStorage(1024 * 500), BlockSize.DEFAULT, new LRUCacheProvider(100, BlockSize.DEFAULT));
+        return new Addressable(new MemoryStorage(1024 * 500), new LRUCache(100, BlockSize.DEFAULT));
     }
 }

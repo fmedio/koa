@@ -25,20 +25,18 @@
 package net.rhapso.koa.storage;
 
 import net.rhapso.koa.StorageFactory;
-import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.CacheProvider;
-import net.rhapso.koa.storage.block.LRUCacheProvider;
+import net.rhapso.koa.storage.block.Cache;
 import net.rhapso.koa.tree.StoreName;
 
 public class MemoryStorageFactory extends StorageFactory {
     public MemoryStorageFactory() {
-        super(new LRUCacheProvider(1000, BlockSize.DEFAULT));
+        super();
     }
 
     @Override
-    protected Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider) {
-        StorageProvider storageProvider = new MemoryStorage(getBlockSize().asInt() * 100);
-        return new Addressable(storageProvider, getBlockSize(), cacheProvider);
+    protected Addressable createAddressable(StoreName storeName, Cache cache) {
+        Storage storage = new MemoryStorage(cache.getBlockSize().asInt() * 100);
+        return new Addressable(storage, cache);
     }
 
     @Override

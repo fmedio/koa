@@ -22,29 +22,28 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.storage;
+package net.rhapso.koa.storage.block;
 
-import net.rhapso.koa.StorageFactory;
-import net.rhapso.koa.storage.block.Cache;
-import net.rhapso.koa.tree.StoreName;
+public class CacheStatistics {
+    private long cacheHits;
+    private long cacheMisses;
+    private long stores;
+    private int capacity;
+    private int currentSize;
 
-import java.io.File;
-
-public class FileStorageFactory extends StorageFactory {
-    private File dataDir;
-
-    public FileStorageFactory(File dataDir) {
-        super();
-        this.dataDir = dataDir;
+    public CacheStatistics(long cacheHits, long cacheMisses, int capacity, int currentSize, long stores) {
+        this.cacheHits = cacheHits;
+        this.cacheMisses = cacheMisses;
+        this.capacity = capacity;
+        this.currentSize = currentSize;
+        this.stores = stores;
     }
 
-    protected Addressable createAddressable(StoreName storeName, Cache cache) {
-        File file = new File(dataDir, storeName.getName());
-        return new Addressable(new FileStorage(file), cache);
+    public double hitRatio() {
+        return (double) cacheHits / (double) (cacheHits + cacheMisses);
     }
 
-    @Override
-    public boolean physicallyExists(StoreName storeName) {
-        return new File(dataDir, storeName.getName()).exists();
+    public double fillRatio() {
+        return (double) currentSize / (double) capacity;
     }
 }

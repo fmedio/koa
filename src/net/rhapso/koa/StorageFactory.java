@@ -25,8 +25,7 @@
 package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.CacheProvider;
+import net.rhapso.koa.storage.block.Cache;
 import net.rhapso.koa.tree.Order;
 import net.rhapso.koa.tree.StoreName;
 
@@ -36,17 +35,13 @@ import java.util.Map;
 public abstract class StorageFactory {
     protected Map<StoreName, Addressable> addressables;
     protected Order order;
-    protected BlockSize blockSize;
-    private CacheProvider cacheProvider;
 
-    public StorageFactory(CacheProvider cacheProvider) {
+    public StorageFactory() {
         order = new Order(10);
         addressables = new HashMap<StoreName, Addressable>();
-        blockSize = BlockSize.DEFAULT;
-        this.cacheProvider = cacheProvider;
     }
 
-    protected abstract Addressable createAddressable(StoreName storeName, CacheProvider cacheProvider);
+    protected abstract Addressable createAddressable(StoreName storeName, Cache cache);
 
     public abstract boolean physicallyExists(StoreName storeName);
 
@@ -54,19 +49,15 @@ public abstract class StorageFactory {
         return addressables.containsKey(storeName) || physicallyExists(storeName);
     }
 
-    public BlockSize getBlockSize() {
-        return blockSize;
-    }
-
     public Order getOrder() {
         return order;
     }
 
-    public Addressable openAddressable(StoreName storeName) {
+    public Addressable openAddressable(StoreName storeName, Cache cache) {
         if (addressables.containsKey(storeName)) {
             return addressables.get(storeName);
         }
-        Addressable addressable = createAddressable(storeName, cacheProvider);
+        Addressable addressable = createAddressable(storeName, cache);
         addressables.put(storeName, addressable);
         return addressable;
     }

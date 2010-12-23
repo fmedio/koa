@@ -26,7 +26,7 @@ package net.rhapso.koa.storage;
 
 import java.nio.ByteBuffer;
 
-public class MemoryStorage implements StorageProvider {
+public class MemoryStorage implements Storage {
     private final ByteBuffer byteBuffer;
     private int pos;
 

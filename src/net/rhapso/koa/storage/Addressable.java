@@ -27,23 +27,23 @@ package net.rhapso.koa.storage;
 import net.rhapso.koa.storage.block.Block;
 import net.rhapso.koa.storage.block.BlockId;
 import net.rhapso.koa.storage.block.BlockSize;
-import net.rhapso.koa.storage.block.CacheProvider;
+import net.rhapso.koa.storage.block.Cache;
 
 public class Addressable {
-    private final CacheProvider cacheProvider;
-    private final StorageProvider storageProvider;
+    private final Cache cache;
+    private final Storage storage;
     private final BlockSize blockSize;
     private long position;
 
     public void flush() {
-        cacheProvider.flush();
+        cache.flush();
     }
 
 
-    public Addressable(final StorageProvider storageProvider, final BlockSize blockSize, CacheProvider cacheProvider) {
-        this.storageProvider = storageProvider;
-        this.blockSize = blockSize;
-        this.cacheProvider = cacheProvider;
+    public Addressable(final Storage storage, Cache cache) {
+        this.storage = storage;
+        this.blockSize = cache.getBlockSize();
+        this.cache = cache;
         this.position = 0;
     }
 
@@ -59,7 +59,7 @@ public class Addressable {
 
 
     private Block obtainBlock() {
-        return cacheProvider.obtainBlock(storageProvider, currentBlockId());
+        return cache.obtainBlock(storage, currentBlockId());
     }
 
     public void write(byte[] b) {
@@ -120,7 +120,7 @@ public class Addressable {
     }
 
     public long length() {
-        return storageProvider.length();
+        return storage.length();
     }
 
     public Offset nextInsertionLocation(Offset currentOffset, long length) {
@@ -138,7 +138,7 @@ public class Addressable {
     }
 
     public void close() {
-        storageProvider.close();
+        storage.close();
     }
 
     public Offset getPosition() {

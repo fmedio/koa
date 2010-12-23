@@ -29,7 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-public class FileStorage implements StorageProvider {
+public class FileStorage implements Storage {
     private final RandomAccessFile randomAccessFile;
 
     public FileStorage(File file) {

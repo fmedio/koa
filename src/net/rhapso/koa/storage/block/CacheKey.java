@@ -25,19 +25,19 @@
 
 package net.rhapso.koa.storage.block;
 
-import net.rhapso.koa.storage.StorageProvider;
+import net.rhapso.koa.storage.Storage;
 
 public class CacheKey {
-    private StorageProvider storageProvider;
+    private Storage storage;
     private BlockId blockId;
 
-    public CacheKey(StorageProvider storageProvider, BlockId blockId) {
-        this.storageProvider = storageProvider;
+    public CacheKey(Storage storage, BlockId blockId) {
+        this.storage = storage;
         this.blockId = blockId;
     }
 
-    public StorageProvider getAddressable() {
-        return storageProvider;
+    public Storage getAddressable() {
+        return storage;
     }
 
     public BlockId getBlockId() {
@@ -51,7 +51,7 @@ public class CacheKey {
 
         CacheKey cacheKey = (CacheKey) o;
 
-        if (storageProvider != null ? storageProvider != cacheKey.storageProvider : cacheKey.storageProvider != null)
+        if (storage != null ? storage != cacheKey.storage : cacheKey.storage != null)
             return false;
         if (blockId != null ? !blockId.equals(cacheKey.blockId) : cacheKey.blockId != null) return false;
 
@@ -60,7 +60,7 @@ public class CacheKey {
 
     @Override
     public int hashCode() {
-        int result = storageProvider != null ? storageProvider.hashCode() : 0;
+        int result = storage != null ? storage.hashCode() : 0;
         result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
         return result;
     }

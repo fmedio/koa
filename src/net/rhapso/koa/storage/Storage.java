@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.storage;
 
-public interface StorageProvider {
+public interface Storage {
     public void seek(long pos);
 
     public void read(byte[] b);

@@ -24,23 +24,32 @@
 
 package net.rhapso.koa.storage.block;
 
-import net.rhapso.koa.storage.StorageProvider;
+import net.rhapso.koa.storage.Storage;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LRUCacheProvider extends LinkedHashMap<CacheKey, Block> implements CacheProvider {
-    private final int cachedBlocks;
+public class LRUCache extends LinkedHashMap<CacheKey, Block> implements Cache {
+    private long cacheHits;
+    private long cacheMisses;
+    private long stores;
+
+    private final int maxCachedBlocks;
     private final BlockSize blockSize;
 
-    public LRUCacheProvider(int cachedBlocks, BlockSize blockSize) {
-        this.cachedBlocks = cachedBlocks;
+    public LRUCache(int maxCachedBlocks, BlockSize blockSize) {
+        this.maxCachedBlocks = maxCachedBlocks;
         this.blockSize = blockSize;
     }
 
     @Override
+    public BlockSize getBlockSize() {
+        return blockSize;
+    }
+
+    @Override
     protected boolean removeEldestEntry(Map.Entry<CacheKey, Block> eldest) {
-        if (size() > cachedBlocks) {
+        if (size() > maxCachedBlocks) {
             CacheKey cacheKey = eldest.getKey();
             flush(cacheKey.getAddressable(), cacheKey.getBlockId(), eldest.getValue());
             return true;
@@ -56,31 +65,44 @@ public class LRUCacheProvider extends LinkedHashMap<CacheKey, Block> implements 
         }
     }
 
-    private void flush(StorageProvider storageProvider, BlockId blockId, Block block) {
+    private void flush(Storage storage, BlockId blockId, Block block) {
         if (block.isDirty()) {
-            storageProvider.seek(blockId.asLong() * blockSize.asLong());
-            storageProvider.write(block.bytes());
+            stores++;
+            storage.seek(blockId.asLong() * blockSize.asLong());
+            storage.write(block.bytes());
             block.markClean();
         }
     }
 
 
     @Override
-    public Block obtainBlock(StorageProvider storageProvider, BlockId blockId) {
-        Block block = get(new CacheKey(storageProvider, blockId));
+    public Block obtainBlock(Storage storage, BlockId blockId) {
+        Block block = get(new CacheKey(storage, blockId));
         if (block == null) {
             long blockOffset = blockId.asLong() * blockSize.asLong();
             byte[] bytes = new byte[blockSize.asInt()];
-            if (blockOffset >= storageProvider.length()) {
-                storageProvider.seek(blockOffset);
-                storageProvider.write(new byte[blockSize.asInt()]);
+            if (blockOffset >= storage.length()) {
+                storage.seek(blockOffset);
+                storage.write(new byte[blockSize.asInt()]);
             } else {
-                storageProvider.seek(blockOffset);
-                storageProvider.read(bytes);
+                storage.seek(blockOffset);
+                storage.read(bytes);
             }
             block = new Block(bytes, false);
+            put(new CacheKey(storage, blockId), block);
+            cacheMisses++;
+        } else {
+            cacheHits++;
         }
-        put(new CacheKey(storageProvider, blockId), block);
         return block;
+    }
+
+    @Override
+    public CacheStatistics resetStatistics() {
+        CacheStatistics cacheStatistics = new CacheStatistics(cacheHits, cacheMisses, maxCachedBlocks, size(), stores);
+        cacheHits = 0;
+        cacheMisses = 0;
+        stores = 0;
+        return cacheStatistics;
     }
 }
