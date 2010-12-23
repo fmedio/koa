@@ -68,7 +68,7 @@ public class IOTest extends BaseTestCase {
     }
 
     private void runLocal(int howMany, int samplingRate) {
-        Cache cache = new LRUCache(100, new BlockSize(4096));
+        Cache cache = new LRUCache(10000, new BlockSize(4096));
         FileStorageFactory factory = new FileStorageFactory(data);
         Tree tree = LocalTree.open(new StoreName("test"), factory, cache);
         doRun(howMany, samplingRate, tree, cache);

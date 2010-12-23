@@ -60,7 +60,7 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     }
 
     public void testReadInnerNode() throws Exception {
-        when(addressable.read()).thenReturn((int) NodeType.innerNode.asByte());
+        when(addressable.read()).thenReturn((int) Scribe.NodeType.innerNode.asByte());
 
         Node node = nodeFactory.read(new Offset(randomLong));
 
@@ -69,7 +69,7 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     }
 
     public void testReadLeafNode() throws Exception {
-        when(addressable.read()).thenReturn((int) NodeType.leafNode.asByte());
+        when(addressable.read()).thenReturn((int) Scribe.NodeType.leafNode.asByte());
 
         Node node = nodeFactory.read(new Offset(randomLong));
 
@@ -79,17 +79,17 @@ public class NodeFactoryTest extends BaseTreeTestCase {
 
     public void testNewInnerNode() throws Exception {
         InnerNode innerNode = nodeFactory.newInnerNode(new NodeRef(randomLong));
-        verify(addressable, times(1)).write(NodeType.innerNode.asByte());
-        verify(treeControl, times(1)).allocate(NodeType.innerNode.storageSize(order));
+        verify(addressable, times(1)).write(Scribe.NodeType.innerNode.asByte());
+        verify(treeControl, times(1)).allocate(new InnerNodeScribe(order).storageSize());
         verify(addressable, atLeastOnce()).write(any(byte[].class));
     }
 
     public void testNewLeafNode() throws Exception {
-        when(addressable.read()).thenReturn((int) NodeType.leafNode.asByte());
+        when(addressable.read()).thenReturn((int) Scribe.NodeType.leafNode.asByte());
         LeafNode leafNode = nodeFactory.newLeafNode();
         leafNode.setParent(new NodeRef(randomLong));
-        verify(addressable, times(1)).write(NodeType.leafNode.asByte());
-        verify(treeControl, times(1)).allocate(NodeType.leafNode.storageSize(order));
+        verify(addressable, times(1)).write(Scribe.NodeType.leafNode.asByte());
+        verify(treeControl, times(1)).allocate(new LeafNodeScribe(order).storageSize());
         verify(addressable, atLeastOnce()).write(any(byte[].class));
     }
 

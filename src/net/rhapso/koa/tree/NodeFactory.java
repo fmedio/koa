@@ -32,6 +32,8 @@ import net.rhapso.koa.storage.StorageSize;
 public class NodeFactory {
     private final Addressable addressable;
     private final TreeControl treeControl;
+    private final LeafNodeScribe leafNodeScribe;
+    private final InnerNodeScribe innerNodeScribe;
     private final Order order;
 
     public NodeFactory(Addressable addressable) {
@@ -47,18 +49,20 @@ public class NodeFactory {
         this.treeControl = treeControl;
         this.order = treeControl.getOrder();
         this.addressable = addressable;
+        leafNodeScribe = new LeafNodeScribe(order);
+        innerNodeScribe = new InnerNodeScribe(order);
     }
 
     Node read(Offset offset) {
         byte typeMarker = new ByteIO().read(addressable, offset);
-        NodeType nodeType = NodeType.fromByte(typeMarker);
-        return nodeType.read(this, addressable, offset, order);
+        Scribe scribe = Scribe.NodeType.choose(typeMarker, leafNodeScribe, innerNodeScribe);
+        return scribe.read(this, addressable, offset);
     }
 
-    private Node createNode(NodeRef parent, NodeType nodeType) {
-        Offset from = treeControl.allocate(nodeType.storageSize(order));
-        new ByteIO().write(addressable, from, nodeType.asByte());
-        return nodeType.create(from, order, this, addressable, parent);
+    private Node createNode(NodeRef parent, Scribe scribe) {
+        Offset from = treeControl.allocate(scribe.storageSize());
+        new ByteIO().write(addressable, from, scribe.nodeType().asByte());
+        return scribe.create(from, this, addressable, parent);
     }
 
     public KeyRef append(Key key) {
@@ -107,11 +111,11 @@ public class NodeFactory {
     }
 
     LeafNode newLeafNode() {
-        return (LeafNode) createNode(NodeRef.NULL, NodeType.leafNode);
+        return (LeafNode) createNode(NodeRef.NULL, leafNodeScribe);
     }
 
     InnerNode newInnerNode(NodeRef parent) {
-        return (InnerNode) createNode(parent, NodeType.innerNode);
+        return (InnerNode) createNode(parent, innerNodeScribe);
     }
 
     public TreeControl getTreeControl() {
