@@ -34,7 +34,6 @@ public class LocalTree implements Tree {
     private final NodeFactory nodeFactory;
     private final TreeControl treeControl;
 
-
     public static LocalTree open(StoreName storeName, StorageFactory storageFactory, Cache cache) {
         if (storageFactory.exists(storeName)) {
             Addressable addressable = storageFactory.openAddressable(storeName, cache);
@@ -66,12 +65,12 @@ public class LocalTree implements Tree {
     }
 
     @Override
-    public Iterator cursorAt(Key key) {
+    public Iterator<Key> cursorAt(Key key) {
         return obtainRoot().cursorAt(key);
     }
 
     @Override
-    public Iterator cursorAtOrAfter(Key key) {
+    public Iterator<Key> cursorAtOrAfter(Key key) {
         return obtainRoot().cursorAtOrAfter(key);
     }
 
@@ -105,5 +104,9 @@ public class LocalTree implements Tree {
     @Override
     public Key key(KeyRef ref) {
         return obtainRoot().key(ref);
+    }
+
+    public TreeControl getTreeControl() {
+        return treeControl;
     }
 }

@@ -40,7 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseTreeTestCase extends BaseTestCase {
-    protected Tree memoryTree() {
+    protected LocalTree memoryTree() {
         return LocalTree.open(new StoreName("memory"), new MemoryStorageFactory(), new LRUCache(100, BlockSize.DEFAULT));
     }
 
@@ -73,11 +73,11 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
         return Joiner.on(", ").join(list);
     }
 
-    protected String[] stringify(Key[] keys) {
-        String[] sorted = Functional.transform(keys, new GenericFunction<Key, String>() {
+    protected String[] stringify(Bytes[] bytes) {
+        String[] sorted = Functional.transform(bytes, new GenericFunction<Bytes, String>() {
             @Override
-            public String apply(Key key) {
-                return new String(key.bytes());
+            public String apply(Bytes bytes) {
+                return new String(bytes.bytes());
             }
 
             @Override

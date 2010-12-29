@@ -75,10 +75,6 @@ public class TreeControl {
         return order;
     }
 
-    public BlockSize getBlockSize() {
-        return blockSize;
-    }
-
     public long count() {
         return storedArray.get(5);
     }
@@ -86,5 +82,9 @@ public class TreeControl {
     public void incrementCount() {
         long count = storedArray.get(5);
         storedArray.set(5, count + 1);
+    }
+
+    public Addressable getAddressable() {
+        return addressable;
     }
 }
