@@ -61,11 +61,6 @@ public class LocalTree implements Tree {
     }
 
     @Override
-    public Batch createBatch() {
-        return new SequentialBatch(this);
-    }
-
-    @Override
     public Value get(Key key) {
         return obtainRoot().get(key);
     }

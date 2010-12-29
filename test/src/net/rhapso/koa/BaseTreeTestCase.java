@@ -30,16 +30,20 @@ import clutter.GenericFunction;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryStorage;
+import net.rhapso.koa.storage.MemoryStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
-import net.rhapso.koa.tree.Key;
-import net.rhapso.koa.tree.Value;
+import net.rhapso.koa.tree.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseTreeTestCase extends BaseTestCase {
+    protected Tree memoryTree() {
+        return LocalTree.open(new StoreName("memory"), new MemoryStorageFactory(), new LRUCache(100, BlockSize.DEFAULT));
+    }
+
     protected Key key(byte[] bytes) {
         return new Key(bytes);
     }

@@ -42,6 +42,4 @@ public interface Tree {
     public KeyRef referenceOf(Key key);
 
     public Key key(KeyRef ref);
-
-    public Batch createBatch();
 }
