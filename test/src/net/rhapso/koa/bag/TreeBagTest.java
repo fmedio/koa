@@ -25,16 +25,24 @@
 package net.rhapso.koa.bag;
 
 import net.rhapso.koa.BaseTreeTestCase;
+import net.rhapso.koa.tree.Key;
 import net.rhapso.koa.tree.Value;
 
 import java.util.Iterator;
 
-public class MultiTreeTest extends BaseTreeTestCase {
-    public void testInsert() throws Exception {
-        MultiTree tree = MultiTree.initialize(memoryTree(), makeAddressable());
+public class TreeBagTest extends BaseTreeTestCase {
+    private TreeBag tree;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        tree = TreeBag.initialize(memoryTree(), makeAddressable());
         tree.put(key("foo"), value("one"));
         tree.put(key("foo"), value("two"));
         tree.put(key("bar"), value("one"));
+    }
+
+    public void testInsert() throws Exception {
         assertEquals(value("one"), tree.get(key("foo")));
         Iterator<Value> values = tree.getValues(key("foo"));
         assertEquals(value("one"), values.next());
@@ -43,5 +51,12 @@ public class MultiTreeTest extends BaseTreeTestCase {
 
         Iterator<Value> empty = tree.getValues(key("not here"));
         assertFalse(empty.hasNext());
+    }
+
+    public void testCursor() throws Exception {
+        Iterator<Key> iterator = tree.cursorAtOrAfter(new Key(new byte[0]));
+        assertEquals(key("bar"), iterator.next());
+        assertEquals(key("foo"), iterator.next());
+        assertFalse(iterator.hasNext());
     }
 }

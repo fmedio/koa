@@ -1,31 +1,42 @@
 package net.rhapso.koa.bag;
 
 import clutter.Iterators;
+import net.rhapso.koa.StorageFactory;
 import net.rhapso.koa.storage.Addressable;
-import net.rhapso.koa.tree.Key;
-import net.rhapso.koa.tree.KeyRef;
-import net.rhapso.koa.tree.Tree;
-import net.rhapso.koa.tree.Value;
+import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.Cache;
+import net.rhapso.koa.storage.block.LRUCache;
+import net.rhapso.koa.tree.*;
 
 import java.util.Iterator;
 
 /**
- * Tree implementation that supports multiple values for
+ * Tree implementation that supports multiple values for each key
  */
-public class MultiTree implements Tree {
+public class TreeBag implements Tree {
     private Tree keys;
-    private Addressable addressable;
     private MappedMultiValues mappedMultiValues;
 
-    public MultiTree(Tree keys, Addressable values) {
+    public TreeBag(Tree keys, Addressable values) {
         this.keys = keys;
-        this.addressable = values;
-        mappedMultiValues = new MappedMultiValues(addressable);
+        mappedMultiValues = new MappedMultiValues(values);
     }
 
-    public static MultiTree initialize(Tree keys, Addressable addressable) {
+    public static TreeBag initialize(Tree keys, Addressable addressable) {
         MappedMultiValues.initialize(addressable);
-        return new MultiTree(keys, addressable);
+        return new TreeBag(keys, addressable);
+    }
+
+    public static TreeBag open(StoreName storeName, StorageFactory storageFactory, Cache keyCache) {
+        if (storageFactory.exists(storeName)) {
+            Tree keys = LocalTree.open(storeName, storageFactory, keyCache);
+            Addressable addressable = storageFactory.openAddressable(storeName.append("_data"), new LRUCache(100, new BlockSize(4096)));
+            return new TreeBag(keys, addressable);
+        } else {
+            Tree keys = LocalTree.open(storeName, storageFactory, keyCache);
+            Addressable addressable = storageFactory.openAddressable(storeName.append("_data"), new LRUCache(100, new BlockSize(4096)));
+            return TreeBag.initialize(keys, addressable);
+        }
     }
 
     @Override

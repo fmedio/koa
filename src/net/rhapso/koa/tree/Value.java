@@ -44,6 +44,10 @@ public class Value extends Bytes implements Serializable {
         super(bytes);
     }
 
+    public Value(Serializable serializable) throws Exception {
+        super(serializable);
+    }
+
     public int asInt() {
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytes());
         return byteBuffer.getInt();

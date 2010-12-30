@@ -37,6 +37,10 @@ public class StoreName implements Serializable {
         return name;
     }
 
+    public StoreName append(String s) {
+        return new StoreName(name + s);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

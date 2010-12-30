@@ -43,7 +43,7 @@ public abstract class StorageFactory {
 
     protected abstract Addressable createAddressable(StoreName storeName, Cache cache);
 
-    public abstract boolean physicallyExists(StoreName storeName);
+    protected abstract boolean physicallyExists(StoreName storeName);
 
     public boolean exists(StoreName storeName) {
         return addressables.containsKey(storeName) || physicallyExists(storeName);

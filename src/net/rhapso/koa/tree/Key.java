@@ -32,6 +32,10 @@ public class Key extends Bytes implements Comparable<Key>, Serializable {
         super(bytes);
     }
 
+    public Key(Serializable serializable) {
+        super(serializable);
+    }
+
     public Key(String s) {
         super(s.getBytes());
     }
@@ -54,4 +58,5 @@ public class Key extends Bytes implements Comparable<Key>, Serializable {
         }
         return mine.length - his.length;
     }
+
 }
