@@ -35,7 +35,7 @@ public class Executor<I extends Serializable, K extends Serializable & Comparabl
             tasks.get(taskId).add(next);
         }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 4);
         for (MapTask<I, K, IV> task : tasks) {
             executorService.submit(task);
         }
