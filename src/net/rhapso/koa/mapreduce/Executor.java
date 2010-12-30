@@ -15,15 +15,19 @@ import java.util.concurrent.TimeUnit;
 
 public class Executor<I extends Serializable, K extends Serializable & Comparable<K>, IV extends Serializable & Comparable<IV>, OV extends Serializable> {
     private StorageFactory storageFactory;
+    private ProgressReporter progressReporter;
 
-    public Executor(StorageFactory storageFactory) {
+    public Executor(StorageFactory storageFactory, ProgressReporter progressReporter) {
         this.storageFactory = storageFactory;
+        this.progressReporter = progressReporter;
     }
 
     public void execute(Job<I, K, IV, OV> job, int mapTasks) {
         List<MapTask<I, K, IV>> tasks = new ArrayList<MapTask<I, K, IV>>(mapTasks);
         for (int i = 0; i < mapTasks; i++) {
-            MapTask<I, K, IV> task = new MapTask<I, K, IV>(i, storageFactory, job.makeMapper());
+            MapTaskId taskId = new MapTaskId(mapTasks, i);
+            Mapper<I, K, IV> mapper = job.makeMapper();
+            MapTask<I, K, IV> task = new MapTask<I, K, IV>(progressReporter, taskId, storageFactory, mapper);
             tasks.add(task);
         }
 
@@ -35,7 +39,7 @@ public class Executor<I extends Serializable, K extends Serializable & Comparabl
             tasks.get(taskId).add(next);
         }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 4);
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 1);
         for (MapTask<I, K, IV> task : tasks) {
             executorService.submit(task);
         }
@@ -50,11 +54,19 @@ public class Executor<I extends Serializable, K extends Serializable & Comparabl
         Reducer<K, IV, OV> reducer = job.makeReducer();
         Output<K, OV> output = job.makeOutput();
 
+
         Iterator<K> keys = allKeys(tasks);
+        long totalCount = keyCount(tasks);
+        long doneSoFar = 0;
+        ReduceTaskId taskId = new ReduceTaskId(0, 1);
+
         while (keys.hasNext()) {
             K key = keys.next();
             Iterator<IV> values = allValues(key, tasks);
             reducer.reduce(key, values, output);
+            if (doneSoFar++ % 1000 == 0) {
+                progressReporter.reduceProgress(taskId, totalCount, doneSoFar);
+            }
         }
     }
 
@@ -65,6 +77,14 @@ public class Executor<I extends Serializable, K extends Serializable & Comparabl
         }
         MultiIteratorSource<IV> source = new MultiIteratorSource<IV>(iterators);
         return new CachingIterator<IV>(source);
+    }
+
+    private long keyCount(List<MapTask<I, K, IV>> tasks) {
+        long count = 0;
+        for (MapTask<I, K, IV> task : tasks) {
+            count += task.keyCount();
+        }
+        return count;
     }
 
     private Iterator<K> allKeys(List<MapTask<I, K, IV>> tasks) {

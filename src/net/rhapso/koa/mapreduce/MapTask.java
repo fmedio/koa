@@ -14,13 +14,15 @@ import java.util.List;
 public class MapTask<I extends Serializable, K extends Serializable & Comparable<K>, IV extends Serializable> implements Runnable {
     private TreeEmitter<K, IV> emitter;
     private List<I> inputs;
-    private int taskId;
+    private ProgressReporter progressReporter;
+    private MapTaskId taskId;
     private Mapper<I, K, IV> mapper;
 
-    public MapTask(int taskId, StorageFactory storageFactory, Mapper<I, K, IV> mapper) {
+    public MapTask(ProgressReporter progressReporter, MapTaskId taskId, StorageFactory storageFactory, Mapper<I, K, IV> mapper) {
+        this.progressReporter = progressReporter;
         this.taskId = taskId;
         this.mapper = mapper;
-        emitter = new TreeEmitter<K, IV>(storageFactory, taskId);
+        emitter = new TreeEmitter<K, IV>(storageFactory, taskId.getId());
         inputs = new LinkedList<I>();
     }
 
@@ -30,15 +32,19 @@ public class MapTask<I extends Serializable, K extends Serializable & Comparable
 
     @Override
     public void run() {
-        Log.info(this, "Starting task " + this.taskId + " with " + inputs.size() + " inputs");
-        for (I input : inputs) {
+        for (int i = 0; i < inputs.size(); i++) {
+            I input = inputs.get(i);
             try {
                 mapper.map(input, emitter);
+                progressReporter.mapProgress(taskId, inputs.size(), i + 1);
             } catch (Exception e) {
                 Log.error(this, "Error running mapper", e);
             }
         }
-        Log.info(this, "Task " + taskId + " done");
+    }
+
+    public long keyCount() {
+        return emitter.getMultiTree().count();
     }
 
     public Iterator<K> keys() {

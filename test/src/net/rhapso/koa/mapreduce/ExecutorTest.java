@@ -11,11 +11,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import static org.mockito.Mockito.mock;
+
 @IntegrationTest
 public class ExecutorTest extends TestCase {
     public void testExecute() throws Exception {
         TestJob job = new TestJob();
-        Executor<String, String, Integer, Integer> executor = new Executor<String, String, Integer, Integer>(new MemoryStorageFactory());
+        ProgressReporter progressReporter = mock(ProgressReporter.class);
+        Executor<String, String, Integer, Integer> executor = new Executor<String, String, Integer, Integer>(new MemoryStorageFactory(), progressReporter);
         executor.execute(job, 2);
         Map<String, Integer> result = job.getCounts();
         assertEquals(4, result.size());
