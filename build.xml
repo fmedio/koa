@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<project name="koa" default="doc">
+    <taskdef name="java2html"
+             classname="com.java2html.Java2HTMLTask">
+        <classpath>
+            <pathelement location="../clutter/lib/j2h.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property name="src_dir" value="./src"/>
+    <property name="build_dir" value="./build/"/>
+    <property name="apidoc_dir" value="${build_dir}/apidocs/"/>
+    <property name="html_dir" value="${build_dir}/html/"/>
+
+    <target name="stage">
+        <mkdir dir="${build_dir}"/>
+        <mkdir dir="${apidoc_dir}"/>
+        <mkdir dir="${html_dir}"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build_dir}"/>
+    </target>
+
+    <target name="doc">
+        <javadoc sourcepath="${src_dir}" destdir="${apidoc_dir}"/>
+        <java2html title="clutter" destination="${html_dir}" simple="no">
+            <fileset dir="${src_dir}">
+                <include name="**/*.java"/>
+            </fileset>
+        </java2html>
+    </target>
+</project>
+
