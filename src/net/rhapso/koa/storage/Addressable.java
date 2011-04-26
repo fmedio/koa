@@ -39,7 +39,6 @@ public class Addressable {
         cache.flush();
     }
 
-
     public Addressable(final Storage storage, Cache cache) {
         this.storage = storage;
         this.blockSize = cache.getBlockSize();

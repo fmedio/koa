@@ -27,18 +27,11 @@ package net.rhapso.koa.tree;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class KeyTest extends BaseTreeTestCase {
-    public void testFromPOJO() throws Exception {
-        Serializable serializable = 42.42d;
-        Key key = new Key(serializable);
-        Double result = (Double) key.asPOJO();
-    }
-
     public void testSort() {
         List<Key> keys = new ArrayList<Key>();
         for (String string : new String[]{"ffff", "b", "bc", "bbb", "dd", "de", "deffff"}) {

@@ -22,40 +22,28 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.tree;
+package net.rhapso.koa.storage;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
+import net.rhapso.koa.BaseTreeTestCase;
+import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.LRUCache;
 
-public class Value extends Bytes implements Serializable {
-    public Value(String contents) {
-        super(contents);
+public class ByteStoreTest extends BaseTreeTestCase {
+    public void testStore() throws Exception {
+        ByteStore byteStore = ByteStore.initialize(makeAddressable());
+        Offset first = byteStore.put(new byte[42]);
+        Offset second = byteStore.put(new byte[43]);
+        Offset third = byteStore.put(new byte[44]);
+        assertEquals(42, byteStore.get(first).length);
+        assertEquals(43, byteStore.get(second).length);
+        assertEquals(44, byteStore.get(third).length);
     }
 
-    public Value(long l) {
-        super(new LongValue(l).asBytes());
-    }
-
-    public Value(byte b) {
-        super(new byte[]{b});
-    }
-
-    public Value(byte[] bytes) {
-        super(bytes);
-    }
-
-    public int asInt() {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes());
-        return byteBuffer.getInt();
-    }
-
-    public byte asByte() {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes());
-        return byteBuffer.get();
-    }
-
-    public long asLong() {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes());
-        return byteBuffer.getLong();
+    public void testWeirdBufferOverflow() throws Exception {
+        Addressable addressable = new Addressable(new MemoryStorage(1024 * 500), new LRUCache(100, new BlockSize(8)));
+        ByteStore byteStore = ByteStore.initialize(addressable);
+        byteStore.put(new byte[3]);
+        byteStore.put(new byte[3]);
+        byteStore.put(new byte[3]);
     }
 }
