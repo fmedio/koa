@@ -29,15 +29,13 @@ import com.googlecode.concurrentlinkedhashmap.EvictionListener;
 import net.rhapso.koa.storage.Storage;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 public class LRUCache implements Cache {
     private volatile long cacheHits;
     private volatile long cacheMisses;
     private volatile long stores;
+    private ExecutorService executor;
 
     private final int maxCachedBlocks;
     private final BlockSize blockSize;
@@ -46,6 +44,7 @@ public class LRUCache implements Cache {
     public LRUCache(int maxCachedBlocks, BlockSize blockSize) {
         this.maxCachedBlocks = maxCachedBlocks;
         this.blockSize = blockSize;
+        executor = Executors.newSingleThreadExecutor();
         blocks = new ConcurrentLinkedHashMap.Builder<CacheKey, FutureTask<Block>>()
                 .maximumWeightedCapacity(maxCachedBlocks)
                 .listener(new Flusher())
@@ -126,16 +125,24 @@ public class LRUCache implements Cache {
 
         @Override
         public Block call() throws Exception {
-            long blockOffset = blockId.asLong() * blockSize.asLong();
-            byte[] bytes = new byte[blockSize.asInt()];
-            if (blockOffset >= storage.length()) {
-                storage.seek(blockOffset);
-                storage.write(new byte[blockSize.asInt()]);
-            } else {
-                storage.seek(blockOffset);
-                storage.read(bytes);
-            }
-            return new Block(bytes, false);
+            Future<Block> future = executor.submit(new Callable<Block>() {
+                @Override
+                public Block call() throws Exception {
+
+                    long blockOffset = blockId.asLong() * blockSize.asLong();
+                    byte[] bytes = new byte[blockSize.asInt()];
+                    if (blockOffset >= storage.length()) {
+                        storage.seek(blockOffset);
+                        storage.write(new byte[blockSize.asInt()]);
+                    } else {
+                        storage.seek(blockOffset);
+                        storage.read(bytes);
+                    }
+                    return new Block(bytes, false);
+                }
+            });
+
+            return future.get();
         }
     }
 }
