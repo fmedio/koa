@@ -58,6 +58,10 @@ public class MemoryStorage implements Storage {
         return byteBuffer.capacity();
     }
 
+    public byte[] bytes() {
+        return byteBuffer.array();
+    }
+
     @Override
     public void close() {
     }

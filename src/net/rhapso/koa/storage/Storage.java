@@ -24,6 +24,9 @@
 
 package net.rhapso.koa.storage;
 
+/**
+ * Metaphor of a stateful storage device, like a disk or a tape
+ */
 public interface Storage {
     public void seek(long pos);
 
