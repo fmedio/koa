@@ -34,13 +34,11 @@ public class ByteIO implements IO<Byte> {
 
     @Override
     public void write(Addressable addressable, Offset offset, Byte tee) {
-        addressable.seek(offset.asLong());
-        addressable.write(tee);
+        addressable.write(offset.asLong(), tee);
     }
 
     @Override
     public Byte read(Addressable addressable, Offset offset) {
-        addressable.seek(offset.asLong());
-        return (byte) addressable.read();
+        return (byte) addressable.read(offset.asLong());
     }
 }

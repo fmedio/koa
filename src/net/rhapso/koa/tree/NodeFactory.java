@@ -77,9 +77,8 @@ public class NodeFactory {
 
     private Offset write(byte[] buf) {
         Offset offset = treeControl.allocate(new StorageSize(4 + buf.length));
-        addressable.seek(offset.asLong());
-        addressable.writeInt(buf.length);
-        addressable.write(buf);
+        addressable.writeInt(offset.asLong(), buf.length);
+        addressable.write(offset.asLong() + 4, buf);
         return offset;
     }
 
@@ -92,9 +91,8 @@ public class NodeFactory {
     }
 
     byte[] readBytes(long position) {
-        addressable.seek(position);
-        byte[] bytes = new byte[addressable.readInt()];
-        addressable.read(bytes);
+        byte[] bytes = new byte[addressable.readInt(position)];
+        addressable.read(position + 4, bytes);
         return bytes;
     }
 

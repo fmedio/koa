@@ -34,13 +34,11 @@ public class LongIO implements IO<Long> {
 
     @Override
     public void write(Addressable addressable, Offset offset, Long tee) {
-        addressable.seek(offset.asLong());
-        addressable.writeLong(tee);
+        addressable.writeLong(offset.asLong(), tee);
     }
 
     @Override
     public Long read(Addressable addressable, Offset offset) {
-        addressable.seek(offset.asLong());
-        return addressable.readLong();
+        return addressable.readLong(offset.asLong());
     }
 }

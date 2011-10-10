@@ -42,13 +42,11 @@ public class StoredLong {
     }
 
     public void write(long l) {
-        addressable.seek(offset.asLong());
-        addressable.writeLong(l);
+        addressable.writeLong(offset.asLong(), l);
     }
 
     public long read() {
-        addressable.seek(offset.asLong());
-        return addressable.readLong();
+        return addressable.readLong(offset.asLong());
     }
 
     @Override

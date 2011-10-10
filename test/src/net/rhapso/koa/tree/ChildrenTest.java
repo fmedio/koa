@@ -42,8 +42,7 @@ public class ChildrenTest extends BaseTreeTestCase {
         NodeFactory nodeFactory = mock(NodeFactory.class);
 
         Children children = Children.initialize(nodeFactory, addressable, new Offset(randomLong), order);
-        verify(addressable, times(1)).seek(randomLong);
-        verify(addressable, times(1)).write(new byte[Children.storageSize(order).intValue()]);
+        verify(addressable, times(1)).write(randomLong, new byte[Children.storageSize(order).intValue()]);
     }
 
     public void testStorageSize() throws Exception {

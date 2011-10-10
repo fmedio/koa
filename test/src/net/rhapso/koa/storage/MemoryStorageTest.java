@@ -29,12 +29,9 @@ import net.rhapso.koa.BaseTreeTestCase;
 public class MemoryStorageTest extends BaseTreeTestCase {
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
-        addressable.seek(1);
-        addressable.writeLong(-1);
-        addressable.writeLong(randomLong);
-        addressable.seek(42);
-        addressable.seek(1);
-        assertEquals(-1l, addressable.readLong());
-        assertEquals(randomLong, addressable.readLong());
+        addressable.writeLong(1, -1);
+        addressable.writeLong(9, randomLong);
+        assertEquals(-1l, addressable.readLong(1));
+        assertEquals(randomLong, addressable.readLong(9));
     }
 }

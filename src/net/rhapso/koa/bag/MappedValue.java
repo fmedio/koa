@@ -36,30 +36,28 @@ public class MappedValue {
     }
 
     public void write(MappedValueRef ref, Value value) {
-        addressable.seek(ref.asLong());
         byte[] bytes = value.getBytes();
-        addressable.writeLong(0l);
-        addressable.writeInt(bytes.length);
-        addressable.write(bytes);
+        final long position = ref.asLong();
+        addressable.writeLong(position, 0l);
+        addressable.writeInt(position + 8, bytes.length);
+        addressable.write(position + 12, bytes);
     }
 
     public Value read(MappedValueRef ref) {
-        addressable.seek(ref.asLong());
-        addressable.readLong();
-        byte[] bytes = new byte[addressable.readInt()];
-        addressable.read(bytes);
+        final long position = ref.asLong();
+        addressable.readLong(position);
+        byte[] bytes = new byte[addressable.readInt(position + 8)];
+        addressable.read(position + 12, bytes);
         return new Value(bytes);
     }
 
 
     public MappedValueRef getNext(MappedValueRef ref) {
-        addressable.seek(ref.asLong());
-        return new MappedValueRef(addressable.readLong());
+        return new MappedValueRef(addressable.readLong(ref.asLong()));
     }
 
     public void setNext(MappedValueRef ref, MappedValueRef next) {
-        addressable.seek(ref.asLong());
-        addressable.writeLong(next.asLong());
+        addressable.writeLong(ref.asLong(), next.asLong());
     }
 
     public StorageSize storageSize(Value value) {

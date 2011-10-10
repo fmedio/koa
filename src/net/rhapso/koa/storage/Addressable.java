@@ -33,7 +33,6 @@ public class Addressable {
     private final Cache cache;
     private final Storage storage;
     private final BlockSize blockSize;
-    private long position;
 
     public void flush() {
         cache.flush();
@@ -43,79 +42,56 @@ public class Addressable {
         this.storage = storage;
         this.blockSize = cache.getBlockSize();
         this.cache = cache;
-        this.position = 0;
     }
 
 
-    public void seek(long pos) {
-        this.position = pos;
-    }
-
-    public void read(byte[] b) {
-        obtainBlock().read(currentBlockOffset(), b);
-        position += b.length;
+    public void read(long position, byte[] b) {
+        obtainBlock(position).read(blockOffset(position), b);
     }
 
 
-    private Block obtainBlock() {
-        return cache.obtainBlock(storage, currentBlockId());
+    private Block obtainBlock(long position) {
+        return cache.obtainBlock(storage, new BlockId(position / blockSize.asLong()));
     }
 
-    public void write(byte[] b) {
-        obtainBlock().put(currentBlockOffset(), b);
-        position += b.length;
+    public void write(long position, byte[] b) {
+        obtainBlock(position).put(blockOffset(position), b);
     }
 
-    public int readInt() {
-        int value = obtainBlock().readInt(currentBlockOffset());
-        position += 4;
-        return value;
+    public int readInt(long position) {
+        return obtainBlock(position).readInt(blockOffset(position));
     }
 
-    public void writeInt(int v) {
-        obtainBlock().putInt(currentBlockOffset(), v);
-        position += 4;
+    public void writeInt(long position, int v) {
+        obtainBlock(position).putInt(blockOffset(position), v);
     }
 
-    public long readLong() {
-        long result = obtainBlock().readLong(currentBlockOffset());
-        position += 8;
-        return result;
+    public long readLong(long position) {
+        return obtainBlock(position).readLong(blockOffset(position));
     }
 
-    public double readDouble() {
-        double result = obtainBlock().readDouble(currentBlockOffset());
-        position += 8;
-        return result;
+    public double readDouble(long position) {
+        return obtainBlock(position).readDouble(blockOffset(position));
     }
 
-    public void writeDouble(double d) {
-        obtainBlock().putDouble(currentBlockOffset(), d);
-        position += 8;
+    public void writeDouble(long position, double d) {
+        obtainBlock(position).putDouble(blockOffset(position), d);
     }
 
-    public void writeLong(long v) {
-        obtainBlock().putLong(currentBlockOffset(), v);
-        position += 8;
+    public void writeLong(long position, long v) {
+        obtainBlock(position).putLong(blockOffset(position), v);
     }
 
-    public int read() {
-        byte b = obtainBlock().read(currentBlockOffset());
-        position++;
-        return b;
+    public int read(long position) {
+        return obtainBlock(position).read(blockOffset(position));
     }
 
-    public void write(int aByte) {
-        obtainBlock().put(currentBlockOffset(), (byte) aByte);
-        position++;
+    public void write(long position, int aByte) {
+        obtainBlock(position).put(blockOffset(position), (byte) aByte);
     }
 
-    private int currentBlockOffset() {
+    private int blockOffset(long position) {
         return (int) (position % blockSize.asLong());
-    }
-
-    private BlockId currentBlockId() {
-        return new BlockId(position / blockSize.asLong());
     }
 
     public long length() {
@@ -138,10 +114,6 @@ public class Addressable {
 
     public void close() {
         storage.close();
-    }
-
-    public Offset getPosition() {
-        return new Offset(position);
     }
 
     public BlockSize getBlockSize() {

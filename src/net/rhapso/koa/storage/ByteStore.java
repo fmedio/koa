@@ -45,30 +45,26 @@ public class ByteStore {
     }
 
     public static ByteStore initialize(Addressable addressable) {
-        addressable.seek(0);
-        addressable.writeLong(8);
+        addressable.writeLong(0, 8);
         return new ByteStore(addressable);
     }
 
     public Offset put(byte[] bytes) {
-        storage.seek(0);
-        long insertionPoint = storage.readLong();
+        long insertionPoint = storage.readLong(0);
         Offset writeOffset = storage.nextInsertionLocation(new Offset(insertionPoint), bytes.length);
-        storage.seek(writeOffset.asLong());
-        storage.writeInt(bytes.length);
-        storage.write(bytes);
+        final long position = writeOffset.asLong();
+        storage.writeInt(position, bytes.length);
+        storage.write(position + 4, bytes);
 
-        Offset currentOffset = storage.getPosition();
-        storage.seek(0);
-        storage.writeLong(currentOffset.asLong());
+        storage.writeLong(0, position + 4 + bytes.length);
         return writeOffset;
     }
 
     public byte[] get(Offset offset) {
-        storage.seek(offset.asLong());
-        int size = storage.readInt();
+        final long position = offset.asLong();
+        int size = storage.readInt(position);
         byte[] result = new byte[size];
-        storage.read(result);
+        storage.read(position + 4, result);
         return result;
     }
 }

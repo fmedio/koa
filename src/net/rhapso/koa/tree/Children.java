@@ -40,8 +40,7 @@ public class Children extends StoredArray<NodeRef> implements Iterable<Node> {
     }
 
     public static Children initialize(NodeFactory nodeFactory, Addressable addressable, Offset offset, Order order) {
-        addressable.seek(offset.asLong());
-        addressable.write(new byte[storageSize(order).intValue()]);
+        addressable.write(offset.asLong(), new byte[storageSize(order).intValue()]);
         return new Children(nodeFactory, addressable, offset, order);
     }
 

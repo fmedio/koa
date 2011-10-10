@@ -60,37 +60,21 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     }
 
     public void testReadInnerNode() throws Exception {
-        when(addressable.read()).thenReturn((int) Scribe.NodeType.innerNode.asByte());
+        when(addressable.read(anyLong())).thenReturn((int) Scribe.NodeType.innerNode.asByte());
 
         Node node = nodeFactory.read(new Offset(randomLong));
 
-        verify(addressable, times(1)).read();
+        verify(addressable, times(1)).read(anyLong());
         assertTrue(node instanceof InnerNode);
     }
 
     public void testReadLeafNode() throws Exception {
-        when(addressable.read()).thenReturn((int) Scribe.NodeType.leafNode.asByte());
+        when(addressable.read(anyLong())).thenReturn((int) Scribe.NodeType.leafNode.asByte());
 
         Node node = nodeFactory.read(new Offset(randomLong));
 
-        verify(addressable, times(1)).read();
+        verify(addressable, times(1)).read(anyLong());
         assertTrue(node instanceof LeafNode);
-    }
-
-    public void testNewInnerNode() throws Exception {
-        InnerNode innerNode = nodeFactory.newInnerNode(new NodeRef(randomLong));
-        verify(addressable, times(1)).write(Scribe.NodeType.innerNode.asByte());
-        verify(treeControl, times(1)).allocate(new InnerNodeScribe(order).storageSize());
-        verify(addressable, atLeastOnce()).write(any(byte[].class));
-    }
-
-    public void testNewLeafNode() throws Exception {
-        when(addressable.read()).thenReturn((int) Scribe.NodeType.leafNode.asByte());
-        LeafNode leafNode = nodeFactory.newLeafNode();
-        leafNode.setParent(new NodeRef(randomLong));
-        verify(addressable, times(1)).write(Scribe.NodeType.leafNode.asByte());
-        verify(treeControl, times(1)).allocate(new LeafNodeScribe(order).storageSize());
-        verify(addressable, atLeastOnce()).write(any(byte[].class));
     }
 
     @Override

@@ -26,10 +26,6 @@ package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.IntIO;
-import net.rhapso.koa.storage.Offset;
-import net.rhapso.koa.storage.StorageSize;
-
-import static org.mockito.Mockito.*;
 
 public class RecordsTest extends BaseTreeTestCase {
     public void testReadWrite() {
@@ -39,19 +35,6 @@ public class RecordsTest extends BaseTreeTestCase {
         intRecords.put(84, 2 * randomInt);
         assertEquals(randomInt, (int) intRecords.get(42));
         assertEquals(randomInt * 2, (int) intRecords.get(84));
-    }
-
-    public void testReadPastCurrentBoundary() {
-        Addressable addressable = mock(Addressable.class);
-        IntIO io = mock(IntIO.class);
-        when(addressable.length()).thenReturn(0l);
-        when(addressable.nextInsertionLocation(any(Offset.class), anyLong())).thenReturn(new Offset(4));
-        when(io.storageSize()).thenReturn(new StorageSize(4));
-
-        Records<Integer> intRecords = new Records<Integer>(addressable, io);
-        intRecords.get(1);
-        verify(addressable, times(1)).length();
-        verify(addressable, times(2)).seek(4);
-        verify(addressable, times(4)).write(0);
+        assertEquals(0, (int) intRecords.get(100));
     }
 }

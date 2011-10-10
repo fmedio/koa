@@ -34,13 +34,11 @@ public class IntIO implements IO<Integer> {
 
     @Override
     public void write(Addressable addressable, Offset offset, Integer tee) {
-        addressable.seek(offset.asLong());
-        addressable.writeInt(tee);
+        addressable.writeInt(offset.asLong(), tee);
     }
 
     @Override
     public Integer read(Addressable addressable, Offset offset) {
-        addressable.seek(offset.asLong());
-        return addressable.readInt();
+        return addressable.readInt(offset.asLong());
     }
 }
