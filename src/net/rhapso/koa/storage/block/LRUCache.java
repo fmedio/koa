@@ -52,6 +52,15 @@ public class LRUCache implements Cache {
     }
 
     @Override
+    public void shutDown() {
+        try {
+            executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public BlockSize getBlockSize() {
         return blockSize;
     }

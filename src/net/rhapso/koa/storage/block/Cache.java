@@ -34,4 +34,6 @@ public interface Cache {
     public BlockSize getBlockSize();
 
     public CacheStatistics resetStatistics();
+
+    public void shutDown();
 }
