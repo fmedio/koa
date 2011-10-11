@@ -54,6 +54,7 @@ public class LRUCache implements Cache {
     @Override
     public void shutDown() {
         try {
+            executor.shutdownNow();
             executor.awaitTermination(1, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
