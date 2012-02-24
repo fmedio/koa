@@ -59,6 +59,7 @@ public class Koa implements Tree {
         return true;
     }
 
+    // TODO: Use plain byte[] instead of typed representations
     @Override
     public Value get(Key key) {
         return obtainRoot().get(key);
@@ -105,5 +106,4 @@ public class Koa implements Tree {
     public Key key(KeyRef ref) {
         return obtainRoot().key(ref);
     }
-
 }
