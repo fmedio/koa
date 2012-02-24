@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,10 +42,6 @@ public class Value extends Bytes implements Serializable {
 
     public Value(byte[] bytes) {
         super(bytes);
-    }
-
-    public Value(Serializable serializable) throws Exception {
-        super(serializable);
     }
 
     public int asInt() {

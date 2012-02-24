@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,6 +56,10 @@ public class MemoryStorage implements Storage {
     @Override
     public long length() {
         return byteBuffer.capacity();
+    }
+
+    public byte[] bytes() {
+        return byteBuffer.array();
     }
 
     @Override

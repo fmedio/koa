@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,9 @@ import net.rhapso.koa.BaseTreeTestCase;
 public class MemoryStorageTest extends BaseTreeTestCase {
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
-        addressable.seek(1);
-        addressable.writeLong(-1);
-        addressable.writeLong(randomLong);
-        addressable.seek(42);
-        addressable.seek(1);
-        assertEquals(-1l, addressable.readLong());
-        assertEquals(randomLong, addressable.readLong());
+        addressable.writeLong(1, -1);
+        addressable.writeLong(9, randomLong);
+        assertEquals(-1l, addressable.readLong(1));
+        assertEquals(randomLong, addressable.readLong(9));
     }
 }

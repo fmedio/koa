@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,15 +42,6 @@ public class TreeControlTest extends BaseTreeTestCase {
         when(mockAddressable.getBlockSize()).thenReturn(new BlockSize(randomInt));
     }
 
-    public void testInitialize() throws Exception {
-        TreeControl.initialize(mockAddressable, new Order(3));
-        verify(mockAddressable, times(1)).writeLong(3l);
-        verify(mockAddressable, times(2)).writeLong(0l);
-        verify(mockAddressable, times(1)).writeLong(eq(TreeControl.storageSize().asLong()));
-        verify(mockAddressable, times(1)).writeLong(-1l);
-        verify(mockAddressable, times(1)).writeLong(randomInt);
-    }
-
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
@@ -65,7 +56,7 @@ public class TreeControlTest extends BaseTreeTestCase {
     }
 
     public void testAllocate() throws Exception {
-        when(mockAddressable.readInt()).thenReturn(randomInt);
+        when(mockAddressable.readInt(anyInt())).thenReturn(randomInt);
         when(mockAddressable.nextInsertionLocation(any(Offset.class), anyLong())).thenReturn(new Offset(randomLong));
 
         TreeControl treeControl = TreeControl.initialize(mockAddressable, new Order(3));

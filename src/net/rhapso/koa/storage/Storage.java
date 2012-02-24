@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,9 @@
 
 package net.rhapso.koa.storage;
 
+/**
+ * Metaphor of a stateful storage device, like a disk or a tape
+ */
 public interface Storage {
     public void seek(long pos);
 

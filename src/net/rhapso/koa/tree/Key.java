@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,6 @@ import java.nio.ByteBuffer;
 public class Key extends Bytes implements Comparable<Key>, Serializable {
     public Key(byte[] bytes) {
         super(bytes);
-    }
-
-    public Key(Serializable serializable) {
-        super(serializable);
     }
 
     public Key(String s) {

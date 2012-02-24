@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,8 +40,7 @@ public class Children extends StoredArray<NodeRef> implements Iterable<Node> {
     }
 
     public static Children initialize(NodeFactory nodeFactory, Addressable addressable, Offset offset, Order order) {
-        addressable.seek(offset.asLong());
-        addressable.write(new byte[storageSize(order).intValue()]);
+        addressable.write(offset.asLong(), new byte[storageSize(order).intValue()]);
         return new Children(nodeFactory, addressable, offset, order);
     }
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,13 +42,11 @@ public class StoredLong {
     }
 
     public void write(long l) {
-        addressable.seek(offset.asLong());
-        addressable.writeLong(l);
+        addressable.writeLong(offset.asLong(), l);
     }
 
     public long read() {
-        addressable.seek(offset.asLong());
-        return addressable.readLong();
+        return addressable.readLong(offset.asLong());
     }
 
     @Override

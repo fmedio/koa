@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,8 +45,7 @@ public class StoredArrayTest extends BaseTreeTestCase {
         StoredArray<Long> result = StoredArray.initialize(longIo, addressable, maxSize, new Offset(0));
 
         int storageSize = StoredArray.storageSize(longIo, maxSize).intValue();
-        verify(addressable, times(1)).seek(0l);
-        verify(addressable, times(1)).write(new byte[storageSize]);
+        verify(addressable, times(1)).write(0, new byte[storageSize]);
     }
 
     public void testInsertHastBounds() throws Exception {

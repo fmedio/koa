@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,7 @@ public class StoredArray<T> {
 
     public static <T> StoredArray<T> initialize(IO<T> io, Addressable addressable, MaxSize maxSize, Offset offset) {
         byte[] bytes = new byte[storageSize(io, maxSize).intValue()];
-        addressable.seek(offset.asLong());
-        addressable.write(bytes);
+        addressable.write(offset.asLong(), bytes);
         return new StoredArray<T>(io, addressable, maxSize, offset);
     }
 
@@ -69,14 +68,12 @@ public class StoredArray<T> {
     }
 
     public int size() {
-        addressable.seek(offset.asLong());
-        return addressable.readInt();
+        return addressable.readInt(offset.asLong());
     }
 
     private void resize(int howMany) {
         int currentSize = size();
-        addressable.seek(offset.asLong());
-        addressable.writeInt(currentSize + howMany);
+        addressable.writeInt(offset.asLong(), currentSize + howMany);
     }
 
     public void add(T tee) {

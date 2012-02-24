@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,11 @@
 
 package net.rhapso.koa.tree;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.Arrays;
 
 public class Bytes implements Serializable {
     private final byte[] bytes;
-
-    public Bytes(Serializable serializable) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(out);
-            oos.writeObject(serializable);
-            oos.flush();
-            oos.reset();
-            oos.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        this.bytes = out.toByteArray();
-    }
 
     public Bytes(String contents) {
         this(contents.getBytes());
@@ -89,17 +75,5 @@ public class Bytes implements Serializable {
 
     public byte[] getBytes() {
         return bytes;
-    }
-
-    public Serializable asPOJO() {
-        ByteArrayInputStream in = new ByteArrayInputStream(getBytes());
-        try {
-            ObjectInputStream ois = new ObjectInputStream(in);
-            Object o = ois.readObject();
-            ois.close();
-            return (Serializable) o;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

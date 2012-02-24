@@ -22,33 +22,28 @@
  * THE SOFTWARE.
  */
 
-package net.rhapso.koa.bag;
+package net.rhapso.koa.storage;
 
 import net.rhapso.koa.BaseTreeTestCase;
-import net.rhapso.koa.tree.Value;
+import net.rhapso.koa.storage.block.BlockSize;
+import net.rhapso.koa.storage.block.LRUCache;
 
-public class MappedValueTest extends BaseTreeTestCase {
-    private MappedValue mappedValue;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        mappedValue = new MappedValue(makeAddressable());
-        mappedValue.write(new MappedValueRef(0), new Value("foo"));
+public class ByteStoreTest extends BaseTreeTestCase {
+    public void testStore() throws Exception {
+        ByteStore byteStore = ByteStore.initialize(makeAddressable());
+        Offset first = byteStore.put(new byte[42]);
+        Offset second = byteStore.put(new byte[43]);
+        Offset third = byteStore.put(new byte[44]);
+        assertEquals(42, byteStore.get(first).length);
+        assertEquals(43, byteStore.get(second).length);
+        assertEquals(44, byteStore.get(third).length);
     }
 
-    public void testReadWrite() throws Exception {
-        assertEquals(value("foo"), mappedValue.read(new MappedValueRef(0)));
-    }
-
-    public void testGetSetNext() throws Exception {
-        MappedValueRef ref = new MappedValueRef(0);
-        assertEquals(0l, mappedValue.getNext(ref).asLong());
-        mappedValue.setNext(ref, new MappedValueRef(randomLong));
-        assertEquals(randomLong, mappedValue.getNext(ref).asLong());
-    }
-
-    public void testStorageSize() throws Exception {
-        assertEquals(17, mappedValue.storageSize(new Value("hello")).asLong());
+    public void testWeirdBufferOverflow() throws Exception {
+        Addressable addressable = new Addressable(new MemoryStorage(1024 * 500), new LRUCache(100, new BlockSize(8)));
+        ByteStore byteStore = ByteStore.initialize(addressable);
+        byteStore.put(new byte[3]);
+        byteStore.put(new byte[3]);
+        byteStore.put(new byte[3]);
     }
 }

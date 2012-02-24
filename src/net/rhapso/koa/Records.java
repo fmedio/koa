@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,12 +54,11 @@ public class Records<T> {
         long storageSize = io.storageSize().asLong();
         Offset candidateOffset = new Offset(index * storageSize);
         Offset offset = storage.nextInsertionLocation(candidateOffset, storageSize);
-        storage.seek(offset.asLong());
+        final long position = offset.asLong();
         if (offset.asLong() > storage.length()) {
             for (long i = 0; i < io.storageSize().asLong(); i++) {
-                storage.write(0);
+                storage.write(position + (i * 8), 0);
             }
-            storage.seek(offset.asLong());
         }
         return offset;
     }

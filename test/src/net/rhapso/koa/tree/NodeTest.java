@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@ public class NodeTest extends BaseTreeTestCase {
         tree.put(new Key(new byte[100]), new Value(randomLong));
 
         for (int i = 0; i < 100; i++) {
-            Value randomValue = new Value(newRandomLong());
+            Value randomValue = new Value(randomLong());
             byte[] bytes = makeRandomBytes(100);
             Key key = new Key(bytes);
             tree.put(key, randomValue);

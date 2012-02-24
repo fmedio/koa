@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ package net.rhapso.koa.storage;
 
 import clutter.BaseTestCase;
 import clutter.Fallible;
-import junit.framework.Assert;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
 
@@ -40,20 +39,19 @@ public class AddressableTest extends BaseTestCase {
     public void testFlushCache() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
         Addressable addressable = new Addressable(storage, new LRUCache(1, blockSize));
-        addressable.writeInt(1);
+        addressable.writeInt(0, 1);
         verify(storage, times(0)).write(new byte[]{0, 0, 0, 1});
-        addressable.writeInt(2);
+        addressable.writeInt(4, 2);
         verify(storage, times(1)).write(new byte[]{0, 0, 0, 1});
     }
 
     public void testCommit() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
         Addressable addressable = new Addressable(storage, new LRUCache(Integer.MAX_VALUE, blockSize));
-        addressable.writeInt(randomInt);
+        addressable.writeInt(0, randomInt);
         addressable.flush();
         byte[] expectedResult = fillBuffer(randomInt);
         verify(storage, times(1)).write(expectedResult);
-        Assert.assertEquals(new Offset(4l), addressable.getPosition());
     }
 
     public void testNextInsertLocation() throws Exception {
@@ -73,12 +71,11 @@ public class AddressableTest extends BaseTestCase {
     public void testOnlyFlushDirtyBlocks() {
         final BlockSize blockSize = new BlockSize(2);
         Addressable addressable = new Addressable(storage, new LRUCache(2, blockSize));
-        addressable.write(new byte[2]);
-        addressable.write(new byte[2]);
+        addressable.write(0, new byte[2]);
+        addressable.write(2, new byte[2]);
         addressable.flush();
         reset(storage);
-        addressable.seek(0);
-        addressable.write(new byte[2]);
+        addressable.write(0, new byte[2]);
         addressable.flush();
         verify(storage, times(1)).seek(0);
         verify(storage, times(1)).write(new byte[2]);

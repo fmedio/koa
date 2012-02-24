@@ -22,46 +22,47 @@
  * THE SOFTWARE.
  */
 
-
 package net.rhapso.koa.storage.block;
 
-import net.rhapso.koa.storage.Storage;
+import junit.framework.TestCase;
+import net.rhapso.koa.storage.MemoryStorage;
 
-public class CacheKey {
-    private Storage storage;
-    private BlockId blockId;
+public class LRUCacheTest extends TestCase {
+    private Cache cache;
+    private MemoryStorage storage;
 
-    public CacheKey(Storage storage, BlockId blockId) {
-        this.storage = storage;
-        this.blockId = blockId;
+    public void testBasicOperation() throws Exception {
+        final Block block = cache.obtainBlock(storage, new BlockId(0));
+        assertTrue(isZero(storage.bytes()));
+        block.put(0, (byte) 1);
+        assertTrue(isZero(storage.bytes()));
+        cache.flush();
+        assertFalse(isZero(storage.bytes()));
     }
 
-    public Storage getStorage() {
-        return storage;
-    }
-
-    public BlockId getBlockId() {
-        return blockId;
+    public void testOldBlocksAreEvicted() throws Exception {
+        assertTrue(isZero(storage.bytes()));
+        cache.obtainBlock(storage, new BlockId(0)).put(0, (byte) 1);
+        cache.obtainBlock(storage, new BlockId(1)).put(0, (byte) 1);
+        assertTrue(isZero(storage.bytes()));
+        cache.obtainBlock(storage, new BlockId(2)).put(0, (byte) 1);
+        assertFalse(isZero(storage.bytes()));
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public void setUp() throws Exception {
+        super.setUp();
+        cache = new LRUCache(2, new BlockSize(128));
+        storage = new MemoryStorage(4 * 128);
+    }
 
-        CacheKey cacheKey = (CacheKey) o;
-
-        if (storage != null ? storage != cacheKey.storage : cacheKey.storage != null)
-            return false;
-        if (blockId != null ? !blockId.equals(cacheKey.blockId) : cacheKey.blockId != null) return false;
+    private boolean isZero(byte[] bytes) {
+        for (byte aByte : bytes) {
+            if (aByte != 0) {
+                return false;
+            }
+        }
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = storage != null ? storage.hashCode() : 0;
-        result = 31 * result + (blockId != null ? blockId.hashCode() : 0);
-        return result;
     }
 }

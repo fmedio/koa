@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +27,11 @@ package net.rhapso.koa.tree;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class KeyTest extends BaseTreeTestCase {
-    public void testFromPOJO() throws Exception {
-        Serializable serializable = 42.42d;
-        Key key = new Key(serializable);
-        Double result = (Double) key.asPOJO();
-    }
-
     public void testSort() {
         List<Key> keys = new ArrayList<Key>();
         for (String string : new String[]{"ffff", "b", "bc", "bbb", "dd", "de", "deffff"}) {

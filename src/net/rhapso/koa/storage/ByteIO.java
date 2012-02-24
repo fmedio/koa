@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2010 Fabrice Medio <fmedio@gmail.com>
+ * Copyright (c) 2010 Fabrice Medio
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,13 +34,11 @@ public class ByteIO implements IO<Byte> {
 
     @Override
     public void write(Addressable addressable, Offset offset, Byte tee) {
-        addressable.seek(offset.asLong());
-        addressable.write(tee);
+        addressable.write(offset.asLong(), tee);
     }
 
     @Override
     public Byte read(Addressable addressable, Offset offset) {
-        addressable.seek(offset.asLong());
-        return (byte) addressable.read();
+        return (byte) addressable.read(offset.asLong());
     }
 }
