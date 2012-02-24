@@ -64,4 +64,11 @@ public class TreeControlTest extends BaseTreeTestCase {
 
         verify(mockAddressable, times(1)).nextInsertionLocation(new Offset(0), 42l);
     }
+    
+    public void testFlush() {
+        when(mockAddressable.flush()).thenReturn(true);
+        TreeControl treeControl = TreeControl.initialize(mockAddressable, new Order(3));
+        treeControl.flush();
+        verify(mockAddressable, times(1)).flush();
+    }
 }

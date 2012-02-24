@@ -106,4 +106,8 @@ public class Koa implements Tree {
     public Key key(KeyRef ref) {
         return obtainRoot().key(ref);
     }
+
+    public void flush() {
+        treeControl.flush();
+    }
 }

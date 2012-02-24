@@ -34,8 +34,9 @@ public class Addressable {
     private final Storage storage;
     private final BlockSize blockSize;
 
-    public void flush() {
+    public boolean flush() {
         cache.flush();
+        return true;
     }
 
     public Addressable(final Storage storage, Cache cache) {

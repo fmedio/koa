@@ -32,7 +32,6 @@ public class TreeControl {
     private final StoredArray<Long> storedArray;
     private final Addressable addressable;
     private final Order order;
-    private final BlockSize blockSize;
 
     public static TreeControl initialize(Addressable addressable, Order order) {
         StoredArray<Long> storedArray = StoredArray.initialize(new LongIO(), addressable, new MaxSize(LENGTH), new Offset(0));
@@ -53,7 +52,6 @@ public class TreeControl {
         this.addressable = addressable;
         storedArray = new StoredArray<Long>(new LongIO(), addressable, new MaxSize(8), new Offset(0));
         order = new Order(storedArray.get(0).intValue());
-        blockSize = new BlockSize(storedArray.get(2).intValue());
     }
 
     public void setRootNode(NodeRef nodeRef) {
@@ -84,7 +82,7 @@ public class TreeControl {
         storedArray.set(5, count + 1);
     }
 
-    public Addressable getAddressable() {
-        return addressable;
+    public void flush() {
+        addressable.flush();
     }
 }
