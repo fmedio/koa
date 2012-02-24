@@ -85,7 +85,7 @@ public class NodeTest extends BaseTreeTestCase {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, order);
         NodeFactory nodeFactory = new NodeFactory(addressable, treeControl);
-        return new LocalTree(nodeFactory, treeControl);
+        return new Koa(nodeFactory, treeControl);
     }
 
     public Tree runTest(Order order) throws Exception {

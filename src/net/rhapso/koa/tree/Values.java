@@ -31,7 +31,6 @@ import net.rhapso.koa.storage.MaxSize;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class Values extends SplittableArray<ValueRef> {
@@ -52,7 +51,7 @@ public class Values extends SplittableArray<ValueRef> {
     public String toString(final NodeFactory nodeFactory) {
         List<String> values = this.map(new Function<ValueRef, String>() {
             @Override
-            public String apply(@Nullable ValueRef valueRef) {
+            public String apply(ValueRef valueRef) {
                 Value value = nodeFactory.readValue(valueRef);
                 return new Bytes(value.bytes()).toString();
             }

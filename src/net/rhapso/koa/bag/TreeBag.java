@@ -29,11 +29,11 @@ public class TreeBag implements Tree {
 
     public static TreeBag open(StoreName storeName, StorageFactory storageFactory, Cache keyCache) {
         if (storageFactory.exists(storeName)) {
-            Tree keys = LocalTree.open(storeName, storageFactory, keyCache);
+            Tree keys = Koa.open(storeName, storageFactory, keyCache);
             Addressable addressable = storageFactory.openAddressable(storeName.append("_data"), new LRUCache(100, new BlockSize(4096)));
             return new TreeBag(keys, addressable);
         } else {
-            Tree keys = LocalTree.open(storeName, storageFactory, keyCache);
+            Tree keys = Koa.open(storeName, storageFactory, keyCache);
             Addressable addressable = storageFactory.openAddressable(storeName.append("_data"), new LRUCache(100, new BlockSize(4096)));
             return TreeBag.initialize(keys, addressable);
         }

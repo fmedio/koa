@@ -28,7 +28,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.*;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class KeySet extends SplittableArray<KeyRef> {
@@ -89,7 +88,7 @@ public class KeySet extends SplittableArray<KeyRef> {
     public String toString() {
         List<String> strings = map(new Function<KeyRef, String>() {
             @Override
-            public String apply(@Nullable KeyRef t) {
+            public String apply(KeyRef t) {
                 byte[] bytes = nodeFactory.readBytes(t.asLong());
                 return new Bytes(bytes).toString();
             }

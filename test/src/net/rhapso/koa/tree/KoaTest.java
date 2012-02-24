@@ -28,12 +28,12 @@ import net.rhapso.koa.BaseTreeTestCase;
 
 import static org.mockito.Mockito.*;
 
-public class LocalTreeTest extends BaseTreeTestCase {
+public class KoaTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
     private TreeControl treeControl;
     private NodeRef nodeRef;
     private Node root;
-    private LocalTree tree;
+    private Koa tree;
     private Key key;
     private Value value;
 
@@ -85,6 +85,6 @@ public class LocalTreeTest extends BaseTreeTestCase {
         key = mock(Key.class);
         value = new Value(randomLong);
 
-        tree = new LocalTree(nodeFactory, treeControl);
+        tree = new Koa(nodeFactory, treeControl);
     }
 }

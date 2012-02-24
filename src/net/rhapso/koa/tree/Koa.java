@@ -30,23 +30,23 @@ import net.rhapso.koa.storage.block.Cache;
 
 import java.util.Iterator;
 
-public class LocalTree implements Tree {
+public class Koa implements Tree {
     private final NodeFactory nodeFactory;
     private final TreeControl treeControl;
 
-    public static LocalTree open(StoreName storeName, StorageFactory storageFactory, Cache cache) {
+    public static Koa open(StoreName storeName, StorageFactory storageFactory, Cache cache) {
         if (storageFactory.exists(storeName)) {
             Addressable addressable = storageFactory.openAddressable(storeName, cache);
             NodeFactory factory = new NodeFactory(addressable);
-            return new LocalTree(factory, factory.getTreeControl());
+            return new Koa(factory, factory.getTreeControl());
         } else {
             Addressable addressable = storageFactory.openAddressable(storeName, cache);
             NodeFactory nodeFactory = NodeFactory.initialize(addressable, storageFactory.getOrder());
-            return new LocalTree(nodeFactory, nodeFactory.getTreeControl());
+            return new Koa(nodeFactory, nodeFactory.getTreeControl());
         }
     }
 
-    public LocalTree(NodeFactory nodeFactory, TreeControl treeControl) {
+    public Koa(NodeFactory nodeFactory, TreeControl treeControl) {
         this.nodeFactory = nodeFactory;
         this.treeControl = treeControl;
     }
@@ -106,7 +106,4 @@ public class LocalTree implements Tree {
         return obtainRoot().key(ref);
     }
 
-    public TreeControl getTreeControl() {
-        return treeControl;
-    }
 }

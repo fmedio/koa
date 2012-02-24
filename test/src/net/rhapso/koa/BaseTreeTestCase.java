@@ -25,8 +25,6 @@
 package net.rhapso.koa;
 
 import clutter.BaseTestCase;
-import clutter.Functional;
-import clutter.GenericFunction;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryStorage;
@@ -40,8 +38,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class BaseTreeTestCase extends BaseTestCase {
-    protected LocalTree memoryTree() {
-        return LocalTree.open(new StoreName("memory"), new MemoryStorageFactory(), new LRUCache(100, BlockSize.DEFAULT));
+    protected Koa memoryTree() {
+        return Koa.open(new StoreName("memory"), new MemoryStorageFactory(), new LRUCache(100, BlockSize.DEFAULT));
     }
 
     protected Key key(byte[] bytes) {
@@ -74,18 +72,12 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
     }
 
     protected String[] stringify(Bytes[] bytes) {
-        String[] sorted = Functional.transform(bytes, new GenericFunction<Bytes, String>() {
-            @Override
-            public String apply(Bytes bytes) {
-                return new String(bytes.bytes());
-            }
-
-            @Override
-            public String[] array(int size) {
-                return new String[size];
-            }
-        });
-        return sorted;
+        String[] strings = new String[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            Bytes theBytes = bytes[i];
+            strings[i] = new String(theBytes.bytes());
+        }
+        return strings;
     }
 
     protected String readCursor(Iterator<Key> iterator) {

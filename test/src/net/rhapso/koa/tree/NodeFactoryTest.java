@@ -41,7 +41,7 @@ public class NodeFactoryTest extends BaseTreeTestCase {
         Addressable addressable = makeAddressable();
         NodeFactory.initialize(addressable, new Order(2));
         NodeFactory factory = new NodeFactory(addressable);
-        Tree tree = new LocalTree(factory, factory.getTreeControl());
+        Tree tree = new Koa(factory, factory.getTreeControl());
         for (String string : new String[]{"a", "bb", "aaa", "fffff", "ab", "bbbb", "f", "ba"}) {
             tree.put(key(string), value(string));
         }
