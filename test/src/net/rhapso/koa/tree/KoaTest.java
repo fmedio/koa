@@ -38,6 +38,11 @@ public class KoaTest extends BaseTreeTestCase {
     private Value value;
 
 
+    public void testTruncate() throws Exception {
+        tree.truncate();
+        verify(treeControl, times(1)).truncate();
+    }
+
     public void testPut() throws Exception {
         NodeRef newRoot = mock(NodeRef.class);
 

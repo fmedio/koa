@@ -32,7 +32,7 @@ import java.util.Iterator;
 
 public class TreeBagTest extends BaseTreeTestCase {
     private TreeBag tree;
-
+    
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -40,6 +40,10 @@ public class TreeBagTest extends BaseTreeTestCase {
         tree.put(key("foo"), value("one"));
         tree.put(key("foo"), value("two"));
         tree.put(key("bar"), value("one"));
+    }
+
+    public void testTruncate() throws Exception {
+        tree.truncate();
     }
 
     public void testInsert() throws Exception {

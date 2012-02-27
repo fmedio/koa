@@ -121,7 +121,13 @@ public class Koa implements Tree {
         return obtainRoot().key(ref);
     }
 
+    @Override
     public void flush() {
         treeControl.flush();
+    }
+
+    @Override
+    public boolean truncate() {
+        return treeControl.truncate();
     }
 }

@@ -42,6 +42,15 @@ public class TreeControlTest extends BaseTreeTestCase {
         when(mockAddressable.getBlockSize()).thenReturn(new BlockSize(randomInt));
     }
 
+    public void testTruncate() throws Exception {
+        Addressable addressable = makeAddressable();
+        TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
+        treeControl.setRootNode(new NodeRef(42));
+        assertEquals(42l, treeControl.getRootNode().getOffset().asLong());
+        treeControl.truncate();
+        assertEquals(-1l, treeControl.getRootNode().getOffset().asLong());
+    }
+
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));

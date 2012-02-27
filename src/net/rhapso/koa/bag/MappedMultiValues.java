@@ -106,4 +106,8 @@ public class MappedMultiValues {
             }
         };
     }
+
+    public void flush() {
+        treeControl.flush();
+    }
 }

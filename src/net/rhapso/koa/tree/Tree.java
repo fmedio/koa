@@ -42,4 +42,8 @@ public interface Tree {
     public KeyRef referenceOf(Key key);
 
     public Key key(KeyRef ref);
+
+    public void flush();
+
+    public boolean truncate();
 }

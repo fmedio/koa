@@ -118,6 +118,17 @@ public class TreeBag implements Tree {
         return keys.key(ref);
     }
 
+    @Override
+    public void flush() {
+        keys.flush();
+        mappedMultiValues.flush();
+    }
+
+    @Override
+    public boolean truncate() {
+        throw new UnsupportedOperationException();
+    }
+
     public Iterator<Value> getValues(Key key) {
         Value value = keys.get(key);
         if (value == null) {

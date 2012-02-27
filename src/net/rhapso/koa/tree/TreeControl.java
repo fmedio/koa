@@ -85,4 +85,9 @@ public class TreeControl {
     public void flush() {
         addressable.flush();
     }
+
+    public boolean truncate() {
+        initialize(addressable, order);
+        return true;
+    }
 }
