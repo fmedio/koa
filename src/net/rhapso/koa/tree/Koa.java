@@ -26,13 +26,27 @@ package net.rhapso.koa.tree;
 
 import net.rhapso.koa.StorageFactory;
 import net.rhapso.koa.storage.Addressable;
+import net.rhapso.koa.storage.FileStorageFactory;
+import net.rhapso.koa.storage.MemoryStorageFactory;
+import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.Cache;
+import net.rhapso.koa.storage.block.LRUCache;
 
+import java.io.File;
 import java.util.Iterator;
+import java.util.UUID;
 
 public class Koa implements Tree {
     private final NodeFactory nodeFactory;
     private final TreeControl treeControl;
+
+    public static Koa persistent(File path, int blockSize, int cachedBlocks) {
+        return open(new StoreName(path.getName()), new FileStorageFactory(path), new LRUCache(cachedBlocks, new BlockSize(blockSize)));
+    }
+
+    public static Koa memoryBased(int blockSize, int cachedBlocks) {
+        return open(new StoreName(UUID.randomUUID().toString()), new MemoryStorageFactory(), new LRUCache(cachedBlocks, new BlockSize(blockSize)));
+    }
 
     public static Koa open(StoreName storeName, StorageFactory storageFactory, Cache cache) {
         if (storageFactory.exists(storeName)) {
