@@ -46,7 +46,8 @@ public class RealKoaTest extends BaseTreeTestCase {
 
         then = System.currentTimeMillis();
         for (int i = 0; i < 3000; i++) {
-            tree.get(new Key(Integer.toString(i).getBytes()));
+            Value value = tree.get(new Key(Integer.toString(i).getBytes()));
+            assertNotNull(value);
         }
         elapsed = System.currentTimeMillis() - then;
         System.out.println("Elapsed: " + elapsed);

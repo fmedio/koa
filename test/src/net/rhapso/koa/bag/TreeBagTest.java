@@ -42,8 +42,16 @@ public class TreeBagTest extends BaseTreeTestCase {
         tree.put(key("bar"), value("one"));
     }
 
-    public void testTruncate() throws Exception {
-        tree.truncate();
+    public void testClear() throws Exception {
+        tree = TreeBag.initialize(memoryTree(), makeAddressable());
+        tree.put(key("foo"), value("one"));
+        assertTrue(tree.contains(key("foo")));
+
+        tree.clear();
+        assertFalse(tree.contains(key("foo")));
+
+        tree.put(key("foo"), value("two"));
+        assertTrue(tree.contains(key("foo")));
     }
 
     public void testInsert() throws Exception {

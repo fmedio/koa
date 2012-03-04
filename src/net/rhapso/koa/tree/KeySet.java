@@ -47,11 +47,11 @@ public class KeySet extends SplittableArray<KeyRef> {
         return storageSize(order, new KeyRefIO());
     }
 
-    public int insertionPoint(KeyRef keyRef, boolean failOnDuplicateKey) {
-        return insertionPoint(nodeFactory.readKey(keyRef), failOnDuplicateKey);
+    public int insertionPoint(KeyRef keyRef) {
+        return insertionPoint(nodeFactory.readKey(keyRef));
     }
 
-    public int insertionPoint(Key candidate, boolean failOnDuplicateKey) {
+    public int insertionPoint(Key candidate) {
         int i = 0;
         for (; i < this.size(); i++) {
             int result = candidate.compareTo(nodeFactory.readKey(this.get(i)));
@@ -60,11 +60,7 @@ public class KeySet extends SplittableArray<KeyRef> {
             }
 
             if (result == 0) {
-                if (failOnDuplicateKey) {
-                    throw new DuplicateKeyException(candidate);
-                } else {
-                    return i + 1;
-                }
+                return -(i + 1);
             }
         }
 

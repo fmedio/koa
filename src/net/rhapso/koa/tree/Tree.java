@@ -27,6 +27,9 @@ package net.rhapso.koa.tree;
 import java.util.Iterator;
 
 public interface Tree {
+    /**
+     * @return true if the key was updated
+     */
     public boolean put(Key key, Value value);
 
     public Value get(Key key);
@@ -45,5 +48,5 @@ public interface Tree {
 
     public void flush();
 
-    public boolean truncate();
+    public boolean clear();
 }

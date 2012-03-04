@@ -63,7 +63,7 @@ public abstract class Node {
         return (InnerNode) nodeFactory.read(getParent());
     }
 
-    public abstract NodeRef put(Key key, Value value);
+    public abstract InsertionResult put(Key key, Value value);
 
     public abstract boolean contains(Key key);
 

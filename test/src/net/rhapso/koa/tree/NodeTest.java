@@ -94,12 +94,18 @@ public class NodeTest extends BaseTreeTestCase {
 
         for (int i = 0; i < 100; i++) {
             Value randomValue = new Value(randomLong());
+            Value updatedValue = new Value(randomLong());
+
             byte[] bytes = makeRandomBytes(100);
             Key key = new Key(bytes);
-            tree.put(key, randomValue);
+
+            assertFalse(tree.put(key, randomValue));
             assertTrue(tree.contains(key));
-            Value value = tree.get(key);
-            assertEquals(randomValue, value);
+            assertEquals(randomValue, tree.get(key));
+
+            assertTrue(tree.put(key, updatedValue));
+            assertEquals(updatedValue, tree.get(key));
+
             KeyRef ref = tree.referenceOf(key);
             Key result = tree.key(ref);
             assertEquals(key, result);

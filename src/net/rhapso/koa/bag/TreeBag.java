@@ -125,8 +125,10 @@ public class TreeBag implements Tree {
     }
 
     @Override
-    public boolean truncate() {
-        throw new UnsupportedOperationException();
+    public boolean clear() {
+        keys.clear();
+        mappedMultiValues.clear();
+        return true;
     }
 
     public Iterator<Value> getValues(Key key) {

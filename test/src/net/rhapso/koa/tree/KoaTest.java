@@ -39,8 +39,8 @@ public class KoaTest extends BaseTreeTestCase {
 
 
     public void testTruncate() throws Exception {
-        tree.truncate();
-        verify(treeControl, times(1)).truncate();
+        tree.clear();
+        verify(treeControl, times(1)).clear();
     }
 
     public void testPut() throws Exception {
@@ -48,7 +48,7 @@ public class KoaTest extends BaseTreeTestCase {
 
         when(treeControl.getRootNode()).thenReturn(nodeRef);
         when(nodeFactory.read(nodeRef)).thenReturn(root);
-        when(root.put(key, value)).thenReturn(newRoot);
+        when(root.put(key, value)).thenReturn(new InsertionResult(newRoot, false));
 
         tree.put(key, value);
 

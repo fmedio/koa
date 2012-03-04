@@ -35,7 +35,10 @@ public class InnerNode extends Node {
     }
 
     InnerNode add(KeyRef keyRef, Node child) {
-        int insertionPoint = keys().insertionPoint(keyRef, true);
+        int insertionPoint = keys().insertionPoint(keyRef);
+        if (insertionPoint < 0) {
+            insertionPoint = -insertionPoint;
+        }
         keys().add(insertionPoint, keyRef);
         children.add(insertionPoint + 1, child);
 
@@ -50,20 +53,19 @@ public class InnerNode extends Node {
     }
 
     @Override
-    public NodeRef put(Key key, Value value) {
-        int i = keys().insertionPoint(key, true);
-        Node node = children.resolve(i);
-        try {
-            node.put(key, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public InsertionResult put(Key key, Value value) {
+        int i = keys().insertionPoint(key);
+        if (i < 0) {
+            i = -i;
         }
+        Node node = children.resolve(i);
+        InsertionResult result = node.put(key, value);
 
         if (getParent().isNull()) {
-            return this.getNodeRef();
+            return new InsertionResult(this.getNodeRef(), result.didUpdate);
         }
 
-        return getParent();
+        return new InsertionResult(getParent(), result.didUpdate);
     }
 
     @Override
@@ -95,7 +97,10 @@ public class InnerNode extends Node {
     }
 
     private Node findNodeFor(Key key) {
-        int i = keys().insertionPoint(key, false);
+        int i = keys().insertionPoint(key);
+        if (i < 0) {
+            i = -i;
+        }
         return children.resolve(i);
     }
 

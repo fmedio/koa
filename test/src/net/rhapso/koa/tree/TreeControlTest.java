@@ -47,7 +47,7 @@ public class TreeControlTest extends BaseTreeTestCase {
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
         treeControl.setRootNode(new NodeRef(42));
         assertEquals(42l, treeControl.getRootNode().getOffset().asLong());
-        treeControl.truncate();
+        treeControl.clear();
         assertEquals(-1l, treeControl.getRootNode().getOffset().asLong());
     }
 

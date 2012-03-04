@@ -81,6 +81,16 @@ public class LeafNodeTest extends BaseTreeTestCase {
         assertNull(leafNode.get(key(42)));
     }
 
+    public void testUpdate() throws Exception {
+        boolean didUpdate = leafNode.put(key(1), value(1)).didUpdate;
+        assertEquals(value(1), leafNode.get(key(1)));
+        assertFalse(didUpdate);
+
+        didUpdate = leafNode.put(key(1), value(2)).didUpdate;
+        assertEquals(value(2), leafNode.get(key(1)));
+        assertTrue(didUpdate);
+    }
+
     public void testSplit() throws Exception {
         LeafNodeSplitter splitter = mock(LeafNodeSplitter.class);
 
@@ -95,16 +105,16 @@ public class LeafNodeTest extends BaseTreeTestCase {
 
     public void testLeafNodeIsRootNode() throws Exception {
         leafNode = nodeFactory.newLeafNode();
-        NodeRef result = leafNode.put(key(1), value(1));
-        assertEquals(leafNode.getNodeRef(), result);
+        InsertionResult result = leafNode.put(key(1), value(1));
+        assertEquals(leafNode.getNodeRef(), result.newRoot);
     }
 
     public void testLiveParent() throws Exception {
         NodeRef parent = new NodeRef(randomLong);
         leafNode = nodeFactory.newLeafNode();
         leafNode.setParent(parent);
-        NodeRef result = leafNode.put(key(1), value(1));
-        assertEquals(parent, result);
+        InsertionResult result = leafNode.put(key(1), value(1));
+        assertEquals(parent, result.newRoot);
     }
 
     @Override

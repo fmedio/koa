@@ -39,29 +39,39 @@ public class LeafNode extends Node {
     }
 
     @Override
-    public NodeRef put(Key key, Value value) {
+    public InsertionResult put(Key key, Value value) {
         return put(key, value, new LeafNodeSplitter());
     }
 
-    public NodeRef put(Key key, Value value, LeafNodeSplitter splitter) {
-        KeyRef keyRef = getNodeFactory().append(key);
+    public InsertionResult put(Key key, Value value, LeafNodeSplitter splitter) {
         ValueRef valueRef = getNodeFactory().append(value);
 
-        int i = keys().insertionPoint(key, true);
-        keys().add(i, keyRef);
-        values().add(i, valueRef);
+        boolean didUpdate = false;
 
-        int order = getNodeFactory().getOrder().asInt();
-        int keyCount = keys().size();
-        if (keyCount > order) {
-            splitter.splitInto(getNodeFactory(), this, getNodeFactory().newLeafNode());
+
+        int i = keys().insertionPoint(key);
+        if (i < 0) {
+            i = -i -1;
+            values().set(i, valueRef);
+            didUpdate = true;
+        } else {
+            KeyRef keyRef = getNodeFactory().append(key);
+
+            keys().add(i, keyRef);
+            values().add(i, valueRef);
+
+            int order = getNodeFactory().getOrder().asInt();
+            int keyCount = keys().size();
+            if (keyCount > order) {
+                splitter.splitInto(getNodeFactory(), this, getNodeFactory().newLeafNode());
+            }
+
+            if (!getParent().isNull()) {
+                return new InsertionResult(getParent(), false);
+            }
         }
 
-        if (!getParent().isNull()) {
-            return getParent();
-        }
-
-        return this.getNodeRef();
+        return new InsertionResult(getNodeRef(), didUpdate);
     }
 
 
@@ -108,7 +118,10 @@ public class LeafNode extends Node {
             return new RealCursor(getNodeFactory(), this, new KeyOffset(keyOffset));
         }
 
-        int offset = keys().insertionPoint(key, false);
+        int offset = keys().insertionPoint(key);
+        if (offset < 0) {
+            offset = -offset;
+        }
         if (offset == keys().size()) {
             NodeRef nodeRef = getNextLeafNode();
 

@@ -67,10 +67,12 @@ public class Koa implements Tree {
 
     @Override
     public boolean put(Key key, Value value) {
-        NodeRef newRoot = obtainRoot().put(key, value);
-        treeControl.incrementCount();
-        treeControl.setRootNode(newRoot);
-        return true;
+        InsertionResult result = obtainRoot().put(key, value);
+        if (! result.didUpdate) {
+            treeControl.incrementCount();
+        }
+        treeControl.setRootNode(result.newRoot);
+        return result.didUpdate;
     }
 
     // TODO: Use plain byte[] instead of typed representations
@@ -127,7 +129,7 @@ public class Koa implements Tree {
     }
 
     @Override
-    public boolean truncate() {
-        return treeControl.truncate();
+    public boolean clear() {
+        return treeControl.clear();
     }
 }

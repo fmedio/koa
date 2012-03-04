@@ -65,17 +65,10 @@ public class KeySetTest extends BaseTreeTestCase {
                 key(6)
         ));
 
-        assertEquals(0, keySet.insertionPoint(key(1), false));
-        assertEquals(1, keySet.insertionPoint(key(3), false));
-        assertEquals(2, keySet.insertionPoint(key(5), false));
-        assertEquals(3, keySet.insertionPoint(key(7), false));
-
-        assertFailure(DuplicateKeyException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                keySet.insertionPoint(key(2), true);
-            }
-        });
+        assertEquals(0, keySet.insertionPoint(key(1)));
+        assertEquals(1, keySet.insertionPoint(key(3)));
+        assertEquals(2, keySet.insertionPoint(key(5)));
+        assertEquals(3, keySet.insertionPoint(key(7)));
     }
 
     public void testContains() throws Exception {

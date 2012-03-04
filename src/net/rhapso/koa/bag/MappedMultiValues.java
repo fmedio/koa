@@ -110,4 +110,8 @@ public class MappedMultiValues {
     public void flush() {
         treeControl.flush();
     }
+
+    public void clear() {
+        initialize(addressable);
+    }
 }
