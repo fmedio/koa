@@ -39,6 +39,9 @@ public class FileStorageFactory extends StorageFactory {
     }
 
     protected Addressable createAddressable(StoreName storeName, Cache cache) {
+        if (!dataDir.exists()) {
+            dataDir.mkdirs();
+        }
         File file = new File(dataDir, storeName.getName());
         return new Addressable(new FileStorage(file), cache);
     }
