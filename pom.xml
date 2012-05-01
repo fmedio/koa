@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>koa</groupId>
+    <artifactId>koa</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0</version>
+    <name>koa</name>
+    <url>http://github.com/fmedio/koa</url>
+    <properties>
+        <encoding>UTF-8</encoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>clutter</groupId>
+            <artifactId>clutter</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+            <artifactId>concurrentlinkedhashmap-lru</artifactId>
+            <version>1.2_jdk5</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>./src/</sourceDirectory>
+        <testSourceDirectory>./test/src/</testSourceDirectory>
+    </build>
+</project>

@@ -24,7 +24,6 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.Fallible;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import net.rhapso.koa.BaseTreeTestCase;

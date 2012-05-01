@@ -1,11 +1,13 @@
 package net.rhapso.koa;
 
 import clutter.IntegrationTest;
-import junit.framework.TestCase;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
-import net.rhapso.koa.tree.*;
+import net.rhapso.koa.tree.Key;
+import net.rhapso.koa.tree.Koa;
+import net.rhapso.koa.tree.StoreName;
+import net.rhapso.koa.tree.Value;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
