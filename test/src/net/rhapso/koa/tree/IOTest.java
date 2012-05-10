@@ -25,7 +25,6 @@
 package net.rhapso.koa.tree;
 
 import clutter.BaseTestCase;
-import clutter.PerformanceTest;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.Cache;
@@ -36,7 +35,6 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.Iterator;
 
-@PerformanceTest
 public class IOTest extends BaseTestCase {
 
     private File data;
@@ -55,15 +53,19 @@ public class IOTest extends BaseTestCase {
         FileUtils.deleteQuietly(data);
     }
 
-    public void testVeryLargeRun() throws Exception {
+    public void testKeepJUnitHappy() {
+
+    }
+
+    public void _testVeryLargeRun() throws Exception {
         runLocal(2000000, 5000);
     }
 
-    public void testLargeRun() throws Exception {
+    public void _testLargeRun() throws Exception {
         runLocal(50000, 500);
     }
 
-    public void testSmallRun() throws Exception {
+    public void _testSmallRun() throws Exception {
         runLocal(5000, 500);
     }
 
@@ -116,5 +118,4 @@ public class IOTest extends BaseTestCase {
         long elapsed = System.nanoTime() - then;
         System.out.println("Cursor can read " + (((double) howMany / (double) elapsed) * 1000000000d) + " keys/sec");
     }
-
 }
