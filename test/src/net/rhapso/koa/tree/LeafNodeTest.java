@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.Iterators;
+import baggage.Iterators;
 import net.rhapso.koa.BaseTreeTestCase;
 
 import java.util.Iterator;

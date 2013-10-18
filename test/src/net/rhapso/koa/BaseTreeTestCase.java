@@ -24,7 +24,7 @@
 
 package net.rhapso.koa;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryStorage;

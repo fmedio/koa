@@ -1,6 +1,6 @@
 package net.rhapso.koa;
 
-import clutter.IntegrationTest;
+import baggage.IntegrationTest;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;

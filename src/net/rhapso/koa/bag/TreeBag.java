@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.bag;
 
-import clutter.Iterators;
+import baggage.Iterators;
 import net.rhapso.koa.StorageFactory;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.block.BlockSize;

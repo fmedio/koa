@@ -13,8 +13,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>clutter</groupId>
-            <artifactId>clutter</artifactId>
+            <groupId>baggage</groupId>
+            <artifactId>baggage</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

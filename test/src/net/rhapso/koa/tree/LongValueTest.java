@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 
 public class LongValueTest extends BaseTestCase {
     public void testFromLong() throws Exception {

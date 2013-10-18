@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.Cache;

@@ -24,8 +24,8 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.BaseTestCase;
-import clutter.Fallible;
+import baggage.BaseTestCase;
+import baggage.Fallible;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
 

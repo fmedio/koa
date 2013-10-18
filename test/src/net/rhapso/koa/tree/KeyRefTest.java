@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 
 public class KeyRefTest extends BaseTestCase {
     public void testSerializeDeserialize() throws Exception {

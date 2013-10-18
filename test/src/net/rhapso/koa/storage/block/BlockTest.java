@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.storage.block;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 
 public class BlockTest extends BaseTestCase {
     public void testReadWriteInt() throws Exception {

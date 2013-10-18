@@ -24,9 +24,9 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.BaseTestCase;
-import clutter.Fallible;
-import clutter.IntegrationTest;
+import baggage.BaseTestCase;
+import baggage.Fallible;
+import baggage.IntegrationTest;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

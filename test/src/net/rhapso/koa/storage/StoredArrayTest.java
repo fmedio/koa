@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.storage;
 
-import clutter.Fallible;
+import baggage.Fallible;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;

@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.tree;
 
-import clutter.BaseTestCase;
+import baggage.BaseTestCase;
 
 import static org.mockito.Mockito.*;
 
