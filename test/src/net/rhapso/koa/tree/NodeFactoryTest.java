@@ -28,7 +28,12 @@ import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class NodeFactoryTest extends BaseTreeTestCase {
@@ -36,7 +41,9 @@ public class NodeFactoryTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
     private TreeControl treeControl;
     private Order order;
+    private long randomLong = 42421343;
 
+    @Test
     public void testInitialize() {
         Addressable addressable = makeAddressable();
         NodeFactory.initialize(addressable, new Order(2));
@@ -49,16 +56,18 @@ public class NodeFactoryTest extends BaseTreeTestCase {
         assertEquals("a aaa ab ba bb bbbb f fffff", result);
     }
 
+    @Test
     public void testWriteKey() throws Exception {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
         nodeFactory = new NodeFactory(addressable, treeControl);
         KeyRef left = nodeFactory.append(new Key(new byte[]{1, 2, 3}));
         KeyRef right = nodeFactory.append(new Key(new byte[]{4, 5, 6, 7}));
-        assertEquals(new byte[]{1, 2, 3}, nodeFactory.readKey(left).bytes());
-        assertEquals(new byte[]{4, 5, 6, 7}, nodeFactory.readKey(right).bytes());
+        assertArrayEquals(new byte[]{1, 2, 3}, nodeFactory.readKey(left).bytes());
+        assertArrayEquals(new byte[]{4, 5, 6, 7}, nodeFactory.readKey(right).bytes());
     }
 
+    @Test
     public void testReadInnerNode() throws Exception {
         when(addressable.read(anyLong())).thenReturn((int) Scribe.NodeType.innerNode.asByte());
 
@@ -68,6 +77,7 @@ public class NodeFactoryTest extends BaseTreeTestCase {
         assertTrue(node instanceof InnerNode);
     }
 
+    @Test
     public void testReadLeafNode() throws Exception {
         when(addressable.read(anyLong())).thenReturn((int) Scribe.NodeType.leafNode.asByte());
 
@@ -77,9 +87,8 @@ public class NodeFactoryTest extends BaseTreeTestCase {
         assertTrue(node instanceof LeafNode);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         addressable = mock(Addressable.class);
         treeControl = mock(TreeControl.class);
         order = new Order(3);

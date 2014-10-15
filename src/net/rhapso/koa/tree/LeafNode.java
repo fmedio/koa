@@ -24,7 +24,8 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.Iterators;
+
+import com.google.common.collect.Iterators;
 
 import java.util.Iterator;
 
@@ -104,7 +105,7 @@ public class LeafNode extends Node {
     public Iterator<Key> cursorAt(Key key) {
         int offset = keys().offsetOf(key);
         if (offset == -1) {
-            return Iterators.NULL;
+            return Iterators.concat();
         } else {
             return new RealCursor(getNodeFactory(), this, new KeyOffset(offset));
         }
@@ -126,7 +127,7 @@ public class LeafNode extends Node {
             NodeRef nodeRef = getNextLeafNode();
 
             if (NodeRef.NULL.equals(nodeRef)) {
-                return Iterators.NULL;
+                return Iterators.concat();
             }
 
             LeafNode leafNode = (LeafNode) getNodeFactory().read(nodeRef);

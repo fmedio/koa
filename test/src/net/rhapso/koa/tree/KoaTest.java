@@ -25,7 +25,11 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 public class KoaTest extends BaseTreeTestCase {
@@ -37,12 +41,13 @@ public class KoaTest extends BaseTreeTestCase {
     private Key key;
     private Value value;
 
-
+    @Test
     public void testTruncate() throws Exception {
         tree.clear();
         verify(treeControl, times(1)).clear();
     }
 
+    @Test
     public void testPut() throws Exception {
         NodeRef newRoot = mock(NodeRef.class);
 
@@ -57,6 +62,7 @@ public class KoaTest extends BaseTreeTestCase {
         verify(treeControl, times(1)).incrementCount();
     }
 
+    @Test
     public void testContains() throws Exception {
         when(treeControl.getRootNode()).thenReturn(nodeRef);
         when(nodeFactory.read(nodeRef)).thenReturn(root);
@@ -68,6 +74,7 @@ public class KoaTest extends BaseTreeTestCase {
         assertEquals(true, result);
     }
 
+    @Test
     public void testCreateRootIfNeeded() throws Exception {
         LeafNode leaf = mock(LeafNode.class);
 
@@ -80,9 +87,8 @@ public class KoaTest extends BaseTreeTestCase {
         verify(treeControl, times(1)).setRootNode(leaf.getNodeRef());
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         nodeFactory = mock(NodeFactory.class);
         treeControl = mock(TreeControl.class);
         nodeRef = mock(NodeRef.class);

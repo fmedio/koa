@@ -24,11 +24,15 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
 
-public class KeyRefTest extends BaseTestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class KeyRefTest {
+    @Test
     public void testSerializeDeserialize() throws Exception {
-        KeyRef keyRef = new KeyRef(randomLong);
+        KeyRef keyRef = new KeyRef(42);
         byte[] bytes = keyRef.asBytes();
         assertEquals(keyRef, KeyRef.fromBytes(bytes));
     }

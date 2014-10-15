@@ -24,8 +24,12 @@
 
 package net.rhapso.koa;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.nio.ByteBuffer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class BidirCacheTest extends BaseTreeTestCase {
@@ -33,6 +37,9 @@ public class BidirCacheTest extends BaseTreeTestCase {
     private Bidir underlying;
     private BidirCache cache;
 
+    private long randomLong = 234234;
+
+    @Test
     public void testUpsert() throws Exception {
         when(underlying.upsert(any(ByteBuffer.class))).thenReturn(randomLong);
         assertEquals(randomLong, (long) cache.upsert(bytes));
@@ -40,6 +47,7 @@ public class BidirCacheTest extends BaseTreeTestCase {
         verify(underlying, times(1)).upsert(bytes);
     }
 
+    @Test
     public void testGet() throws Exception {
         when(underlying.get(bytes)).thenReturn(randomLong);
         assertEquals(randomLong, (long) cache.get(bytes));
@@ -47,6 +55,7 @@ public class BidirCacheTest extends BaseTreeTestCase {
         verify(underlying, times(1)).get(bytes);
     }
 
+    @Test
     public void testResolve() throws Exception {
         when(underlying.resolve(randomLong)).thenReturn(bytes);
         assertEquals(bytes, cache.resolve(randomLong));
@@ -54,14 +63,14 @@ public class BidirCacheTest extends BaseTreeTestCase {
         verify(underlying, times(1)).resolve(randomLong);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         bytes = ByteBuffer.wrap(new byte[]{2});
         underlying = mock(Bidir.class);
         cache = new BidirCache(underlying);
     }
 
+    @Test
     public void testByteBufferEquality() throws Exception {
         assertEquals(bytes, ByteBuffer.wrap(new byte[]{2}));
     }

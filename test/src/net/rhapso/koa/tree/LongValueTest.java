@@ -24,11 +24,15 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
 
-public class LongValueTest extends BaseTestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class LongValueTest  {
+    @Test
     public void testFromLong() throws Exception {
-        byte[] bytes = new LongValue(randomLong).asBytes();
-        assertEquals(randomLong, LongValue.fromBytes(bytes).asLong());
+        byte[] bytes = new LongValue(42).asBytes();
+        assertEquals(42, LongValue.fromBytes(bytes).asLong());
     }
 }

@@ -24,10 +24,18 @@
 
 package net.rhapso.koa;
 
+import org.junit.Test;
+
 import java.nio.ByteBuffer;
 import java.util.Iterator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 public class RawBidirTest extends BaseTreeTestCase {
+
+    @Test
     public void testPutGet() throws Exception {
         Bidir bidir = new RawBidir(memoryTree(), memoryTree());
         assertEquals(0l, bidir.upsert(buffer("foo")));
@@ -40,6 +48,7 @@ public class RawBidirTest extends BaseTreeTestCase {
         assertNull(bidir.get(buffer("poop")));
     }
 
+    @Test
     public void testCursorAtOrAfter() {
         Bidir bidir = new RawBidir(memoryTree(), memoryTree());
         for (ByteBuffer buffer : new ByteBuffer[]{buffer("fum"), buffer("fee"), buffer("fo")}) {

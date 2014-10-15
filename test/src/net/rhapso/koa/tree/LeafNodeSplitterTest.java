@@ -25,10 +25,15 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LeafNodeSplitterTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
 
+    @Test
     public void testSplit() throws Exception {
         LeafNode source = nodeFactory.newLeafNode();
         source.setNextLeafNode(new NodeRef(randomLong));
@@ -47,9 +52,8 @@ public class LeafNodeSplitterTest extends BaseTreeTestCase {
         assertEquals(new NodeRef(randomLong), destination.getNextLeafNode());
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(5));
     }
 }

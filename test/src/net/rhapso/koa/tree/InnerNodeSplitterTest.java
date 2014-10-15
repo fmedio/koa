@@ -25,8 +25,14 @@
 package net.rhapso.koa.tree;
 
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class InnerNodeSplitterTest extends BaseTreeTestCase {
+
+    @Test
     public void testSplit() throws Exception {
         InnerNode source = nodeFactory.newInnerNode(NodeRef.NULL);
         InnerNode destination = nodeFactory.newInnerNode(NodeRef.NULL);
@@ -52,9 +58,8 @@ public class InnerNodeSplitterTest extends BaseTreeTestCase {
         assertEquals(parent.getNodeRef(), result.getNodeRef());
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(5));
     }
 

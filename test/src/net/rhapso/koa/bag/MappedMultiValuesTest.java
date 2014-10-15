@@ -26,10 +26,16 @@ package net.rhapso.koa.bag;
 
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.tree.Value;
+import org.junit.Test;
 
 import java.util.Iterator;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 public class MappedMultiValuesTest extends BaseTreeTestCase {
+
+    @Test
     public void testMappedMultiValues() throws Exception {
         MappedMultiValues mappedMultiValues = MappedMultiValues.initialize(makeAddressable());
         MultiValueRef multiValueRef = mappedMultiValues.create();

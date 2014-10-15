@@ -26,9 +26,14 @@ package net.rhapso.koa;
 
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.IntIO;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class RecordsTest extends BaseTreeTestCase {
+    @Test
     public void testReadWrite() {
+        int randomInt = 324324;
         Addressable addressable = makeAddressable();
         Records<Integer> intRecords = new Records<Integer>(addressable, new IntIO());
         intRecords.put(42, randomInt);

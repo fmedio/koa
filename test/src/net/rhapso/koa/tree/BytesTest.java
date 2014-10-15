@@ -24,11 +24,17 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
+
+import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
-public class BytesTest extends BaseTestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+public class BytesTest {
+
+    @Test
     public void testEquals() throws Exception {
         ByteBuffer left = ByteBuffer.wrap(new byte[]{0, 1});
         ByteBuffer center = ByteBuffer.wrap(new byte[]{0, 1});

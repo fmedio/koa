@@ -24,13 +24,18 @@
 
 package net.rhapso.koa.storage.block;
 
-import junit.framework.TestCase;
 import net.rhapso.koa.storage.MemoryStorage;
+import org.junit.Before;
+import org.junit.Test;
 
-public class LRUCacheTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class LRUCacheTest {
     private Cache cache;
     private MemoryStorage storage;
 
+    @Test
     public void testBasicOperation() throws Exception {
         final Block block = cache.obtainBlock(storage, new BlockId(0));
         assertTrue(isZero(storage.bytes()));
@@ -40,6 +45,7 @@ public class LRUCacheTest extends TestCase {
         assertFalse(isZero(storage.bytes()));
     }
 
+    @Test
     public void testOldBlocksAreEvicted() throws Exception {
         assertTrue(isZero(storage.bytes()));
         cache.obtainBlock(storage, new BlockId(0)).put(0, (byte) 1);
@@ -49,9 +55,8 @@ public class LRUCacheTest extends TestCase {
         assertFalse(isZero(storage.bytes()));
     }
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         cache = new LRUCache(2, new BlockSize(128));
         storage = new MemoryStorage(4 * 128);
     }

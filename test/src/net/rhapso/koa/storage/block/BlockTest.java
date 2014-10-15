@@ -24,24 +24,31 @@
 
 package net.rhapso.koa.storage.block;
 
-import baggage.BaseTestCase;
 
-public class BlockTest extends BaseTestCase {
+import org.junit.Test;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+public class BlockTest {
+    @Test
     public void testReadWriteInt() throws Exception {
         Block block = new Block(new byte[]{0, 0, 0, 0}, false);
         block.put(3, (byte) 42);
         assertTrue(block.isDirty());
         assertEquals(42, block.readInt(0));
-        block.putInt(0, randomInt);
-        assertEquals(randomInt, block.readInt(0));
+        block.putInt(0, 43);
+        assertEquals(43, block.readInt(0));
     }
 
+    @Test
     public void testReadWriteBytes() throws Exception {
         Block block = new Block(new byte[8], false);
         block.put(0, new byte[]{0, 2, 3, 4, 5, 6, 7});
         assertTrue(block.isDirty());
         byte[] part = new byte[4];
         block.read(2, part);
-        assertEquals(new byte[]{3, 4, 5, 6}, part);
+        assertArrayEquals(new byte[]{3, 4, 5, 6}, part);
     }
 }

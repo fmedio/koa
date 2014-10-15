@@ -24,19 +24,18 @@
 
 package net.rhapso.koa.storage;
 
-import baggage.Fallible;
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.List;
-
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class StoredArrayTest extends BaseTreeTestCase {
     private Addressable addressable;
     private StoredArray<Integer> array;
 
+    @Test
     public void testInitialize() throws Exception {
         LongIO longIo = new LongIO();
         MaxSize maxSize = new MaxSize(42);
@@ -48,14 +47,10 @@ public class StoredArrayTest extends BaseTreeTestCase {
         verify(addressable, times(1)).write(0, new byte[storageSize]);
     }
 
+    @Test
     public void testInsertHastBounds() throws Exception {
         assertEquals(0, array.size());
-        assertFailure(ArrayIndexOutOfBoundsException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                array.add(1, 0);
-            }
-        });
+        assertFailure(ArrayIndexOutOfBoundsException.class, () -> array.add(1, 0));
         array.add(0, 0);
         assertEquals(1, array.size());
         array.add(0, 1);
@@ -65,22 +60,13 @@ public class StoredArrayTest extends BaseTreeTestCase {
         array.add(0, 3);
         assertEquals(4, array.size());
 
-        assertFailure(ArrayIndexOutOfBoundsException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                array.add(0, randomInt + 5);
-            }
-        });
+        assertFailure(ArrayIndexOutOfBoundsException.class, () -> array.add(0, 42));
     }
 
+    @Test
     public void testRemoveHasBounds() throws Exception {
         assertEquals(0, array.size());
-        assertFailure(ArrayIndexOutOfBoundsException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                array.remove(0);
-            }
-        });
+        assertFailure(ArrayIndexOutOfBoundsException.class, () -> array.remove(0));
         array.add(0, 0);
         array.add(1, 1);
         array.add(2, 2);
@@ -89,6 +75,7 @@ public class StoredArrayTest extends BaseTreeTestCase {
         assertEquals("0 2", array.toString());
     }
 
+    @Test
     public void testRemoveFromBounds() throws Exception {
         array = new StoredArray<Integer>(new IntIO(), addressable, new MaxSize(10), new Offset(0));
         for (int i = 0; i < 10; i++) {
@@ -100,6 +87,7 @@ public class StoredArrayTest extends BaseTreeTestCase {
         assertEquals("1 2 3 4 5 6 7 8", array.toString());
     }
 
+    @Test
     public void testMap() throws Exception {
         array.add(0, 0);
         array.add(1, 1);
@@ -108,35 +96,18 @@ public class StoredArrayTest extends BaseTreeTestCase {
         assertEquals("0 1 2 3", array.toString());
     }
 
+    @Test
     public void testSet() throws Exception {
         array.add(0);
         array.add(1);
         array.add(2);
         array.set(0, 42);
         assertEquals("42 1 2", array.toString());
-        assertFailure(ArrayIndexOutOfBoundsException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                array.set(3, 42);
-            }
-        });
+        assertFailure(ArrayIndexOutOfBoundsException.class, () -> array.set(3, 42));
     }
 
-    private String toString(StoredArray<Integer> array) {
-        List<String> values = array.map(new Function<Integer, String>() {
-            @Override
-            public String apply(Integer integer) {
-                return integer.toString();
-            }
-        });
-
-        String asString = Joiner.on(" ").join(values);
-        return asString;
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         addressable = makeAddressable();
         array = new StoredArray<Integer>(new IntIO(), addressable, new MaxSize(4), new Offset(0));
     }

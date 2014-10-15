@@ -24,18 +24,21 @@
 
 package net.rhapso.koa.storage;
 
-import baggage.BaseTestCase;
-import baggage.Fallible;
+import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.nio.ByteBuffer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class AddressableTest extends BaseTestCase {
+public class AddressableTest extends BaseTreeTestCase {
     private Storage storage;
 
+    @Test
     public void testFlushCache() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
         Addressable addressable = new Addressable(storage, new LRUCache(1, blockSize));
@@ -45,29 +48,27 @@ public class AddressableTest extends BaseTestCase {
         verify(storage, times(1)).write(new byte[]{0, 0, 0, 1});
     }
 
+    @Test
     public void testCommit() throws Exception {
         final BlockSize blockSize = new BlockSize(4);
         Addressable addressable = new Addressable(storage, new LRUCache(Integer.MAX_VALUE, blockSize));
-        addressable.writeInt(0, randomInt);
+        addressable.writeInt(0, 42);
         addressable.flush();
-        byte[] expectedResult = fillBuffer(randomInt);
+        byte[] expectedResult = fillBuffer(42);
         verify(storage, times(1)).write(expectedResult);
     }
 
+    @Test
     public void testNextInsertLocation() throws Exception {
         final BlockSize blockSize = new BlockSize(42);
         final Addressable addressable = new Addressable(storage, new LRUCache(Integer.MAX_VALUE, blockSize));
         assertEquals(0l, addressable.nextInsertionLocation(new Offset(0), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(1), 42).asLong());
         assertEquals(42l, addressable.nextInsertionLocation(new Offset(41), 12).asLong());
-        assertFailure(IllegalArgumentException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                addressable.nextInsertionLocation(new Offset(0), 43);
-            }
-        });
+        assertFailure(IllegalArgumentException.class, () -> addressable.nextInsertionLocation(new Offset(0), 43));
     }
 
+    @Test
     public void testOnlyFlushDirtyBlocks() {
         final BlockSize blockSize = new BlockSize(2);
         Addressable addressable = new Addressable(storage, new LRUCache(2, blockSize));
@@ -81,9 +82,8 @@ public class AddressableTest extends BaseTestCase {
         verify(storage, times(1)).write(new byte[2]);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         storage = mock(Storage.class);
     }
 

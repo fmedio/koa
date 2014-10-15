@@ -24,16 +24,21 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
+import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
-public class RealCursorTest extends BaseTestCase {
+public class RealCursorTest extends BaseTreeTestCase {
     private LeafNode leafNode;
     private NodeFactory nodeFactory;
 
+    @Test
     public void testCursor() throws Exception {
-        LeafNode next = mock(LeafNode.class);
+       LeafNode next = mock(LeafNode.class);
         when(leafNode.size()).thenReturn(3);
         when(next.size()).thenReturn(3);
         when(leafNode.getNextLeafNode()).thenReturn(new NodeRef(randomLong));
@@ -55,6 +60,7 @@ public class RealCursorTest extends BaseTestCase {
         verify(next, times(1)).get(0);
     }
 
+    @Test
     public void testHasNext() throws Exception {
         Key key = mock(Key.class);
 
@@ -72,8 +78,8 @@ public class RealCursorTest extends BaseTestCase {
         assertFalse(cursor.hasNext());
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         leafNode = mock(LeafNode.class);
         nodeFactory = mock(NodeFactory.class);
     }

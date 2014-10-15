@@ -27,12 +27,18 @@ package net.rhapso.koa.tree;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
+import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class NodeTest extends BaseTreeTestCase {
+    @Test
     public void testCursorFrom() throws Exception {
         Tree tree = init(new Order(10));
         tree.put(key(1), new Value(0));
@@ -47,9 +53,11 @@ public class NodeTest extends BaseTreeTestCase {
         assertEquals("1 2 3", Joiner.on(" ").join(keys));
     }
 
+    @Test
     public void testCursorAt() throws Exception {
         Tree tree = runTest(new Order(4));
-        Iterator<Key> iterator = tree.cursorAt(new Key(new byte[100]));
+        Key first = tree.cursorAtOrAfter(new Key(new byte[0])).next();
+        Iterator<Key> iterator = tree.cursorAt(first);
         int count = 0;
         while (iterator.hasNext()) {
             Key key = iterator.next();
@@ -58,9 +66,10 @@ public class NodeTest extends BaseTreeTestCase {
         assertEquals(101, count);
     }
 
+    @Test
     public void testCursorAtOrAfter() throws Exception {
         Tree tree = runTest(new Order(4));
-        Iterator<Key> iterator = tree.cursorAtOrAfter(new Key(new byte[100]));
+        Iterator<Key> iterator = tree.cursorAtOrAfter(new Key(new byte[0]));
         int count = 0;
         while (iterator.hasNext()) {
             Key key = iterator.next();
@@ -69,14 +78,17 @@ public class NodeTest extends BaseTreeTestCase {
         assertEquals(101, count);
     }
 
+    @Test
     public void testInsertEvenOrder() throws Exception {
         runTest(new Order(4));
     }
 
+    @Test
     public void testInsertOddOrder() throws Exception {
         runTest(new Order(5));
     }
 
+    @Test
     public void testBlockIO() throws Exception {
         runTest(new Order(5));
     }
@@ -90,11 +102,11 @@ public class NodeTest extends BaseTreeTestCase {
 
     public Tree runTest(Order order) throws Exception {
         Tree tree = init(order);
-        tree.put(new Key(new byte[100]), new Value(randomLong));
+        tree.put(new Key(new byte[100]), new Value(42));
 
         for (int i = 0; i < 100; i++) {
-            Value randomValue = new Value(randomLong());
-            Value updatedValue = new Value(randomLong());
+            Value randomValue = new Value(RANDOM.nextLong());
+            Value updatedValue = new Value(RANDOM.nextLong());
 
             byte[] bytes = makeRandomBytes(100);
             Key key = new Key(bytes);

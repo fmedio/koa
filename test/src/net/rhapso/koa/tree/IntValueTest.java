@@ -24,11 +24,15 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
 
-public class IntValueTest extends BaseTestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class IntValueTest {
+    @Test
     public void testToFromBytes() throws Exception {
-        byte[] bytes = new IntValue(randomInt).asBytes();
-        assertEquals(randomInt, IntValue.fromBytes(bytes).asInt());
+        byte[] bytes = new IntValue(42).asBytes();
+        assertEquals(42, IntValue.fromBytes(bytes).asInt());
     }
 }

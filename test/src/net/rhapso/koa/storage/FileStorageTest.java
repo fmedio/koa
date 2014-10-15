@@ -24,42 +24,38 @@
 
 package net.rhapso.koa.storage;
 
-import baggage.BaseTestCase;
-import baggage.Fallible;
-import baggage.IntegrationTest;
+import net.rhapso.koa.BaseTreeTestCase;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
-@IntegrationTest
-public class FileStorageTest extends BaseTestCase {
+import static org.junit.Assert.assertEquals;
+
+public class FileStorageTest extends BaseTreeTestCase {
     private File file;
 
+    @Test
     public void testExtentAllocationOnWrite() throws Exception {
         final FileStorage fileStorage = new FileStorage(file);
         assertEquals(0, fileStorage.getCurrentLength());
         fileStorage.seek(100);
-        assertFailure(RuntimeException.class, new Fallible() {
-            @Override
-            public void execute() throws Exception {
-                fileStorage.read(new byte[8]);
-            }
-        });
+        assertFailure(RuntimeException.class, () -> fileStorage.read(new byte[8]));
         fileStorage.write(new byte[1]);
         assertEquals(101, fileStorage.getCurrentLength());
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         file = new File("./addressable");
         FileUtils.deleteQuietly(file);
         file.createNewFile();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         FileUtils.deleteQuietly(file);
     }
 }

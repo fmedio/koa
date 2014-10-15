@@ -24,7 +24,6 @@
 
 package net.rhapso.koa;
 
-import baggage.BaseTestCase;
 import com.google.common.base.Joiner;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.MemoryStorage;
@@ -33,13 +32,36 @@ import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
 import net.rhapso.koa.tree.*;
 
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class BaseTreeTestCase extends BaseTestCase {
+import static org.junit.Assert.fail;
+
+public abstract class BaseTreeTestCase {
+    public static final SecureRandom RANDOM = new SecureRandom();
+
+   protected long randomInt = RANDOM.nextInt();
+   protected long randomLong = RANDOM.nextInt();
+
+
     protected Koa memoryTree() {
         return Koa.open(new StoreName("memory"), new MemoryStorageFactory(), new LRUCache(100, BlockSize.DEFAULT));
+    }
+
+    public void assertFailure(Class<? extends Throwable> expected, Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Throwable throwable) {
+            if (throwable.getClass().equals(expected)) {
+                return;
+            } else {
+                fail("Got a " + throwable.getClass().getName() + ", should have gotten a " + expected.getName());
+            }
+        }
+
+        fail("Should have gotten a " + expected.getName());
     }
 
     protected Key key(byte[] bytes) {
@@ -69,6 +91,12 @@ public abstract class BaseTreeTestCase extends BaseTestCase {
         }
 
         return Joiner.on(", ").join(list);
+    }
+
+    public byte[] makeRandomBytes(int length) {
+        byte[] bytes = new byte[length];
+        RANDOM.nextBytes(bytes);
+        return bytes;
     }
 
     protected String[] stringify(Bytes[] bytes) {

@@ -29,8 +29,14 @@ import com.google.common.collect.Lists;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.Offset;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class KeySetTest extends BaseTreeTestCase {
     private KeySet keySet;
@@ -39,10 +45,12 @@ public class KeySetTest extends BaseTreeTestCase {
     private Order order;
 
 
+    @Test
     public void testStorageSize() throws Exception {
         assertEquals(44, KeySet.storageSize(new Order(4)).intValue());
     }
 
+    @Test
     public void testOffsetOf() throws Exception {
         registerKeys(Lists.newArrayList(
                 key(2),
@@ -57,6 +65,7 @@ public class KeySetTest extends BaseTreeTestCase {
         assertEquals(-1, keySet.offsetOf(key(8)));
     }
 
+    @Test
     public void testInsertionPoint() throws Exception {
         registerKeys(Lists.newArrayList(
                 key(2),
@@ -70,6 +79,7 @@ public class KeySetTest extends BaseTreeTestCase {
         assertEquals(3, keySet.insertionPoint(key(7)));
     }
 
+    @Test
     public void testContains() throws Exception {
         List<Key> keys = Lists.newArrayList(
                 key(makeRandomBytes(3)),
@@ -85,6 +95,7 @@ public class KeySetTest extends BaseTreeTestCase {
         assertFalse(keySet.contains(key(makeRandomBytes(42))));
     }
 
+    @Test
     public void testSplitInto() throws Exception {
         registerKeys(Lists.newArrayList(
                 key(1),
@@ -112,9 +123,8 @@ public class KeySetTest extends BaseTreeTestCase {
         }
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         addressable = makeAddressable();
         order = new Order(4);
         nodeFactory = NodeFactory.initialize(addressable, order);

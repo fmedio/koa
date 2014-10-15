@@ -24,35 +24,39 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
+import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.Cache;
 import net.rhapso.koa.storage.block.CacheStatistics;
 import net.rhapso.koa.storage.block.LRUCache;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.Iterator;
 
-public class IOTest extends BaseTestCase {
+import static org.junit.Assert.fail;
+
+public class IOTest extends BaseTreeTestCase {
 
     private File data;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         data = new File("perftest");
         FileUtils.deleteQuietly(data);
         data.mkdir();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
         FileUtils.deleteQuietly(data);
     }
 
+    @Test
     public void testKeepJUnitHappy() {
 
     }

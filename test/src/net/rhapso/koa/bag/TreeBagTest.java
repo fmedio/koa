@@ -27,21 +27,27 @@ package net.rhapso.koa.bag;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.tree.Key;
 import net.rhapso.koa.tree.Value;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Iterator;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TreeBagTest extends BaseTreeTestCase {
     private TreeBag tree;
     
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         tree = TreeBag.initialize(memoryTree(), makeAddressable());
         tree.put(key("foo"), value("one"));
         tree.put(key("foo"), value("two"));
         tree.put(key("bar"), value("one"));
     }
 
+    @Test
     public void testClear() throws Exception {
         tree = TreeBag.initialize(memoryTree(), makeAddressable());
         tree.put(key("foo"), value("one"));
@@ -54,6 +60,7 @@ public class TreeBagTest extends BaseTreeTestCase {
         assertTrue(tree.contains(key("foo")));
     }
 
+    @Test
     public void testInsert() throws Exception {
         assertEquals(value("one"), tree.get(key("foo")));
         Iterator<Value> values = tree.getValues(key("foo"));
@@ -65,6 +72,7 @@ public class TreeBagTest extends BaseTreeTestCase {
         assertFalse(empty.hasNext());
     }
 
+    @Test
     public void testCursor() throws Exception {
         Iterator<Key> iterator = tree.cursorAtOrAfter(new Key(new byte[0]));
         assertEquals(key("bar"), iterator.next());

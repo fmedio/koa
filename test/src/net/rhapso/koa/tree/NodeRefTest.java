@@ -24,9 +24,14 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.BaseTestCase;
 
-public class NodeRefTest extends BaseTestCase {
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class NodeRefTest {
+    @Test
     public void testIsNull() throws Exception {
         assertTrue(NodeRef.NULL.isNull());
         assertFalse(new NodeRef(42l).isNull());

@@ -24,17 +24,20 @@
 
 package net.rhapso.koa.tree;
 
-import baggage.Iterators;
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Iterator;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class LeafNodeTest extends BaseTreeTestCase {
     private LeafNode leafNode;
     private NodeFactory nodeFactory;
 
+    @Test
     public void testReference() throws Exception {
         for (int key : new int[]{6, 2, 4}) {
             leafNode.put(key(key), value(key));
@@ -45,6 +48,7 @@ public class LeafNodeTest extends BaseTreeTestCase {
         assertNull(leafNode.referenceOf(key(42)));
     }
 
+    @Test
     public void testCursorAtOrAfter() throws Exception {
         for (String key : new String[]{"b", "bc", "bbb"}) {
             leafNode.put(key(key), value(key));
@@ -56,18 +60,20 @@ public class LeafNodeTest extends BaseTreeTestCase {
         assertEquals("", readCursor(leafNode.cursorAtOrAfter(key("cc"))));
     }
 
+    @Test
     public void testCursorAt() throws Exception {
         for (String key : new String[]{"b", "bc", "bbb"}) {
             leafNode.put(key(key), value(key));
         }
 
         Iterator iterator = leafNode.cursorAt(key(0));
-        assertTrue(iterator == Iterators.NULL);
+        assertFalse(iterator.hasNext());
 
         assertEquals("b bbb bc", readCursor(leafNode.cursorAt(key("b"))));
         assertEquals("", readCursor(leafNode.cursorAt(key("c"))));
     }
 
+    @Test
     public void testPut() throws Exception {
         for (int key : new int[]{6, 2, 4}) {
             leafNode.put(key(key), value(key));
@@ -81,6 +87,7 @@ public class LeafNodeTest extends BaseTreeTestCase {
         assertNull(leafNode.get(key(42)));
     }
 
+    @Test
     public void testUpdate() throws Exception {
         boolean didUpdate = leafNode.put(key(1), value(1)).didUpdate;
         assertEquals(value(1), leafNode.get(key(1)));
@@ -91,6 +98,7 @@ public class LeafNodeTest extends BaseTreeTestCase {
         assertTrue(didUpdate);
     }
 
+    @Test
     public void testSplit() throws Exception {
         LeafNodeSplitter splitter = mock(LeafNodeSplitter.class);
 
@@ -103,23 +111,24 @@ public class LeafNodeTest extends BaseTreeTestCase {
         verify(splitter, times(1)).splitInto(eq(nodeFactory), eq(leafNode), any(LeafNode.class));
     }
 
+    @Test
     public void testLeafNodeIsRootNode() throws Exception {
         leafNode = nodeFactory.newLeafNode();
         InsertionResult result = leafNode.put(key(1), value(1));
         assertEquals(leafNode.getNodeRef(), result.newRoot);
     }
 
+    @Test
     public void testLiveParent() throws Exception {
-        NodeRef parent = new NodeRef(randomLong);
+        NodeRef parent = new NodeRef(42);
         leafNode = nodeFactory.newLeafNode();
         leafNode.setParent(parent);
         InsertionResult result = leafNode.put(key(1), value(1));
         assertEquals(parent, result.newRoot);
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         nodeFactory = NodeFactory.initialize(makeAddressable(), new Order(3));
         leafNode = nodeFactory.newLeafNode();
     }

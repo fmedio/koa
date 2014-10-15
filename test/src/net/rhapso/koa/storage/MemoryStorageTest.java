@@ -25,8 +25,13 @@
 package net.rhapso.koa.storage;
 
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class MemoryStorageTest extends BaseTreeTestCase {
+
+    @Test
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
         addressable.writeLong(1, -1);

@@ -1,6 +1,5 @@
 package net.rhapso.koa;
 
-import baggage.IntegrationTest;
 import net.rhapso.koa.storage.FileStorageFactory;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
@@ -9,20 +8,27 @@ import net.rhapso.koa.tree.Koa;
 import net.rhapso.koa.tree.StoreName;
 import net.rhapso.koa.tree.Value;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
-@IntegrationTest
-public class RealKoaTest extends BaseTreeTestCase {    
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class RealKoaTest extends BaseTreeTestCase {
     private File directory;
     
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         directory = new File("foo");
         FileUtils.deleteQuietly(directory);
         directory.mkdir();
     }
 
+    @Test
     public void testDoIt() {
         Koa tree = Koa.open(new StoreName("foo"), new FileStorageFactory(directory), new LRUCache(2048, new BlockSize(4096)));
         Key left = new Key("foo".getBytes());
@@ -34,7 +40,8 @@ public class RealKoaTest extends BaseTreeTestCase {
         assertEquals("bar", new String(tree.get(left).getBytes()));
         assertEquals("pooop", new String(tree.get(right).getBytes()));
     }
-    
+
+    @Test
     public void testCrudePerformance() {
         Koa tree = Koa.open(new StoreName("foo"), new FileStorageFactory(directory), new LRUCache(10000, new BlockSize(4096)));
         long then = System.currentTimeMillis();
@@ -55,8 +62,8 @@ public class RealKoaTest extends BaseTreeTestCase {
         System.out.println("Elapsed: " + elapsed);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         FileUtils.deleteQuietly(directory);
     }
 }

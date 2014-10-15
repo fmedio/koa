@@ -24,9 +24,13 @@
 
 package net.rhapso.koa.tree;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ValueTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class ValueTest {
+
+    @Test
     public void testAsLong() throws Exception {
         Value value = new Value(new LongValue(42).asBytes());
         assertEquals(42l, value.asLong());

@@ -24,7 +24,7 @@
 
 package net.rhapso.koa.bag;
 
-import baggage.Iterators;
+import com.google.common.collect.Iterators;
 import net.rhapso.koa.StorageFactory;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.block.BlockSize;
@@ -134,7 +134,7 @@ public class TreeBag implements Tree {
     public Iterator<Value> getValues(Key key) {
         Value value = keys.get(key);
         if (value == null) {
-            return Iterators.NULL;
+            return Iterators.concat();
         }
 
         MultiValueRef multiValueRef = new MultiValueRef(value.asLong());

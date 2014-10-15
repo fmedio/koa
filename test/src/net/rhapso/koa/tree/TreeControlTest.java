@@ -29,19 +29,25 @@ import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.Offset;
 import net.rhapso.koa.storage.StorageSize;
 import net.rhapso.koa.storage.block.BlockSize;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class TreeControlTest extends BaseTreeTestCase {
     private Addressable mockAddressable;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    private int randomInt = 42214;
+    private long randomLong = 3242342;
+
+    @Before
+    public void setUp() throws Exception {
         mockAddressable = mock(Addressable.class);
         when(mockAddressable.getBlockSize()).thenReturn(new BlockSize(randomInt));
     }
 
+    @Test
     public void testTruncate() throws Exception {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
@@ -51,6 +57,7 @@ public class TreeControlTest extends BaseTreeTestCase {
         assertEquals(-1l, treeControl.getRootNode().getOffset().asLong());
     }
 
+    @Test
     public void testRead() throws Exception {
         Addressable addressable = makeAddressable();
         TreeControl treeControl = TreeControl.initialize(addressable, new Order(3));
@@ -64,6 +71,7 @@ public class TreeControlTest extends BaseTreeTestCase {
         assertEquals(new NodeRef(100), treeControl.getRootNode());
     }
 
+    @Test
     public void testAllocate() throws Exception {
         when(mockAddressable.readInt(anyInt())).thenReturn(randomInt);
         when(mockAddressable.nextInsertionLocation(any(Offset.class), anyLong())).thenReturn(new Offset(randomLong));
@@ -73,7 +81,8 @@ public class TreeControlTest extends BaseTreeTestCase {
 
         verify(mockAddressable, times(1)).nextInsertionLocation(new Offset(0), 42l);
     }
-    
+
+    @Test
     public void testFlush() {
         when(mockAddressable.flush()).thenReturn(true);
         TreeControl treeControl = TreeControl.initialize(mockAddressable, new Order(3));

@@ -27,8 +27,12 @@ package net.rhapso.koa.storage;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.block.BlockSize;
 import net.rhapso.koa.storage.block.LRUCache;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ByteStoreTest extends BaseTreeTestCase {
+    @Test
     public void testStore() throws Exception {
         ByteStore byteStore = ByteStore.initialize(makeAddressable());
         Offset first = byteStore.put(new byte[42]);
@@ -39,6 +43,7 @@ public class ByteStoreTest extends BaseTreeTestCase {
         assertEquals(44, byteStore.get(third).length);
     }
 
+    @Test
     public void testWeirdBufferOverflow() throws Exception {
         Addressable addressable = new Addressable(new MemoryStorage(1024 * 500), new LRUCache(100, new BlockSize(8)));
         ByteStore byteStore = ByteStore.initialize(addressable);

@@ -26,12 +26,18 @@ package net.rhapso.koa.tree;
 
 import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 public class KeyTest extends BaseTreeTestCase {
+    @Test
     public void testSort() {
         List<Key> keys = new ArrayList<Key>();
         for (String string : new String[]{"ffff", "b", "bc", "bbb", "dd", "de", "deffff"}) {
@@ -45,15 +51,18 @@ public class KeyTest extends BaseTreeTestCase {
         assertEquals("b bbb bc dd de deffff ffff", Joiner.on(" ").join(sorted));
     }
 
+    @Test
     public void testEmptyKey() throws Exception {
         assertTrue(new Key(new byte[]{}).compareTo(new Key(new byte[]{0})) < 0);
     }
 
+    @Test
     public void testLargerKeys() throws Exception {
         byte[] bytes = makeRandomBytes(100);
         assertEquals(new Key(bytes).hashCode(), new Key(bytes).hashCode());
     }
 
+    @Test
     public void testCompare() throws Exception {
         assertTrue(new Key(new byte[]{1}).compareTo(new Key(new byte[]{2})) < 0);
         assertTrue(new Key(new byte[]{-10}).compareTo(new Key(new byte[]{-1})) < 0);
@@ -62,6 +71,7 @@ public class KeyTest extends BaseTreeTestCase {
         assertTrue(new Key(new byte[]{1, 1}).compareTo(new Key(new byte[]{1, 1})) == 0);
     }
 
+    @Test
     public void testEqualsAndHashcode() throws Exception {
         assertEquals(new Key(new byte[]{0}), new Key(new byte[]{0}));
         assertEquals(new Key(new byte[]{0}).hashCode(), new Key(new byte[]{0}).hashCode());
@@ -69,6 +79,7 @@ public class KeyTest extends BaseTreeTestCase {
         assertNotEquals(new Key(new byte[]{0}).hashCode(), new Key(new byte[]{1}).hashCode());
     }
 
+    @Test
     public void testToString() throws Exception {
         assertEquals("[1,2,3]", new Key(new byte[]{1, 2, 3}).toString());
     }

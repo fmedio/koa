@@ -28,15 +28,19 @@ import com.google.common.base.Joiner;
 import net.rhapso.koa.BaseTreeTestCase;
 import net.rhapso.koa.storage.Addressable;
 import net.rhapso.koa.storage.Offset;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class ChildrenTest extends BaseTreeTestCase {
     private NodeFactory nodeFactory;
     private Order order;
 
+    @Test
     public void testInitialize() throws Exception {
         Addressable addressable = mock(Addressable.class);
         NodeFactory nodeFactory = mock(NodeFactory.class);
@@ -45,10 +49,12 @@ public class ChildrenTest extends BaseTreeTestCase {
         verify(addressable, times(1)).write(randomLong, new byte[Children.storageSize(order).intValue()]);
     }
 
+    @Test
     public void testStorageSize() throws Exception {
         assertEquals(52, Children.storageSize(new Order(4)).intValue());
     }
 
+    @Test
     public void testSplitHasSideEffect() throws Exception {
         Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         for (int i = 0; i < 5; i++) {
@@ -60,6 +66,7 @@ public class ChildrenTest extends BaseTreeTestCase {
         assertEquals("1 2", children.toString());
     }
 
+    @Test
     public void testInsert() throws Exception {
         Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         children.add(makeNode(2));
@@ -69,6 +76,7 @@ public class ChildrenTest extends BaseTreeTestCase {
         assertEquals("0 2 3 4 5", children.add(4, makeNode(5)).toString());
     }
 
+    @Test
     public void testIterable() throws Exception {
         Children children = new Children(nodeFactory, makeAddressable(), new Offset(0), order);
         for (int i = 0; i < 5; i++) {
@@ -78,18 +86,14 @@ public class ChildrenTest extends BaseTreeTestCase {
         assertEquals("1 2 3 4 5", Joiner.on(" ").join(children));
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         nodeFactory = mock(NodeFactory.class);
         order = new Order(42);
         when(nodeFactory.getOrder()).thenReturn(order);
-        when(nodeFactory.read(any(NodeRef.class))).thenAnswer(new Answer<Node>() {
-            @Override
-            public Node answer(InvocationOnMock invocationOnMock) throws Throwable {
-                NodeRef arg = (NodeRef) invocationOnMock.getArguments()[0];
-                return makeNode((int) arg.asLong());
-            }
+        when(nodeFactory.read(any(NodeRef.class))).thenAnswer(invocationOnMock -> {
+            NodeRef arg = (NodeRef) invocationOnMock.getArguments()[0];
+            return makeNode((int) arg.asLong());
         });
     }
 
